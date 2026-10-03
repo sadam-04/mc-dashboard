@@ -1,0 +1,76 @@
+body {
+    font-family: "Comic Sans MS";
+    background-color: #202020;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    /* margin: 0px 25%; */
+}
+
+.funny-header {
+    display: flex;
+    /* justify-content: center; */
+    margin: auto;
+    margin-top: 10px;
+    font-size: 2.5rem;
+    color: yellow;
+}
+
+.text2 {
+    font-size: 1.6rem;
+    margin-top: 30px;
+}
+
+.text3 {
+    font-size: 1rem;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    /* justify-content: center; */
+    /* width: 350px; */
+}
+
+.dynmapBttn {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    border-radius: 7px;
+    border: 1px solid white;
+    padding: 4px 8px;
+    width: fit-content;
+    background-color: #404040;
+}
+
+.dynmapBttn:hover {
+    background-color: #585858;
+}
+
+th {
+    text-align: left;
+}
+
+tr {
+    height: 30px;
+}
+
+table, th, tr {
+    border: none;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.fineprint {
+    color: #888;
+    font-style: italic;
+}
+
+.coord-row {
+    background-color: #202020;
+}
+
+.coord-row:hover {
+    background-color: #303030;
+}
