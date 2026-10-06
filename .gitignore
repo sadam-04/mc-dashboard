@@ -1,5 +1,3 @@
 pisscraft/settings.py
 db.sqlite3
 __pycache__/
-pisscraft/__pycache__/settings.cpython-313.pyc
-pisscraft/__pycache__/urls.cpython-313.pyc
