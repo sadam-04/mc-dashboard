@@ -7,12 +7,21 @@ body {
     /* margin: 0px 25%; */
 }
 
-.funny-header {
+.header {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #808080;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.funny-title-text {
     display: flex;
     /* justify-content: center; */
-    margin: auto;
-    margin-top: 10px;
-    font-size: 2.5rem;
+    /* margin: auto; */
+    font-size: 2rem;
     color: yellow;
 }
 
@@ -29,7 +38,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    /* justify-content: center; */
+    justify-content: center;
     /* width: 350px; */
 }
 
@@ -41,6 +50,8 @@ body {
     border: 1px solid white;
     padding: 4px 8px;
     width: fit-content;
+    height: fit-content;
+    /* margin: auto; */
     background-color: #404040;
 }
 

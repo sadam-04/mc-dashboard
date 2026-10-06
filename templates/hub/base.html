@@ -1,0 +1,27 @@
+{% load static %}
+<html>
+    <head>
+        <title>Pisscraft</title>
+    
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    </head>
+    <body>
+        <div class="header">
+            <div class="funny-title-text">Pisscraft.com</div>
+
+            <div class="nav-buttons">
+                <a href="/" class="dynmapBttn">Places</a>
+                <a href="/map" class="dynmapBttn">Dynmap</a>
+                <a href="https://map.pisscraft.com" target="_blank" class="dynmapBttn">Dynmap (new tab)</a>
+            </div>
+
+            {% if user.is_authenticated %}
+            <a href="/users/logout" class="dynmapBttn">Log out</a>
+            {% else %}
+            <a href="/users/login" class="dynmapBttn">Log in</a>
+            {% endif %}
+        </div>
+{% block content %}
+{% endblock content %}
+    </body>
+</html>

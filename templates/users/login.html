@@ -1,0 +1,15 @@
+{% extends "hub/base.html" %}
+
+{% block content %}
+<h2>yo</h2>
+
+{% if form.errors %}
+  <p style="color: red;">Incorrect username or password</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+</form>
+{% endblock content %}
