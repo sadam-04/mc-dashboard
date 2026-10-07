@@ -1,0 +1,196 @@
+{% extends "hub/base.html" %}
+{% comment %} {% load static %} {% endcomment %}
+
+{% block content %}
+    <div class="sub-header">
+        <div class="text2">Places</div>
+        {% csrf_token %}
+        {% comment %} <button onclick="say_hello()">Say hi</button> {% endcomment %}
+        <div id="place-action">Copy Mode</div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Fall Excursion</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="fall-ow">Overworld&nbsp;<div class="copyable">33921.5 71 5784.5</div></div>
+            {% comment %} <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div> {% endcomment %}
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Greentop City</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="gtc-ow">Overworld&nbsp;<div class="copyable">36755.5 70 3630.5</div></div>
+            <div class="nether-coords" data-location-id="gtc-ne">Nether&nbsp;<div class="copyable">4583.5 75 443.5</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Tula Town</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="tt-ow">Overworld&nbsp;<div class="copyable">-350.5 65 -1942.5</div></div>
+            <div class="nether-coords" data-location-id="tt-ne">Nether&nbsp;<div class="copyable">-35.5 80 -246.5</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Russelburg</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="rb-ow">Overworld&nbsp;<div class="copyable">-3121 176 -1889.5</div></div>
+            <div class="nether-coords" data-location-id="rb-ne">Nether&nbsp;<div class="copyable">-388 101 -242.5</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Cockenbean</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="cnb-ow">Overworld&nbsp;<div class="copyable">-2814.5 74 -6867.5</div></div>
+            <div class="nether-coords" data-location-id="cnb-ne">Nether&nbsp;<div class="copyable">-359 34 -848</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Porcus</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="porc-ow">Overworld&nbsp;<div class="copyable">-3866.5 72 1763.5</div></div>
+            <div class="nether-coords" data-location-id="porc-ne">Nether&nbsp;<div class="copyable">-488 61 217.5</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Season 2</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="s2-ow">Overworld&nbsp;<div class="copyable">-8588.5 64 -4154.5</div></div>
+            <div class="nether-coords" data-location-id="s2-ne">Nether&nbsp;<div class="copyable">-1086.5 58 -527</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Two Castles</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="2c-ow">Overworld&nbsp;<div class="copyable">4172.5 63 1355.5</div></div>
+            <div class="nether-coords" data-location-id="2c-ne">Nether&nbsp;<div class="copyable">513 80 180.5</div></div>
+        </div>
+    </div>
+
+    <div class="coord-row-2">
+        <div class="place-title">Bazinganite</div>
+        <div class="coordinate-area">
+            <div class="ow-coords" data-location-id="bn-ow">Overworld&nbsp;<div class="copyable">10332.5 69 -2107.5</div></div>
+            {% comment %} <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div> {% endcomment %}
+        </div>
+    </div>
+
+    {% comment %} <table>
+        <tr>
+            <th>Name</th>
+            <th>Overworld</th>
+            <th>Nether</th>
+        </tr>
+        <tr class="coord-row">
+            <td>Greentop City</td>
+            <td>36755.5 70 3630.5</td>
+            <td>4583.5 75 443.5</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Tula Town</td>
+            <td>-350.5 65 -1942.5</td>
+            <td>-35.5 80 -246.5</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Russelberg</td>
+            <td>-3121 176 -1889.5</td>
+            <td>-388 101 -242.5</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Cockenbean</td>
+            <td>-2814.5 74 -6867.5</td>
+            <td>-359 33.875 -848</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Porcus</td>
+            <td>-3866.5 72 1763.5</td>
+            <td>unknown</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Season 2</td>
+            <td>-8588.5 64 -4154.5</td>
+            <td>-1086.5 58 -527</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Two Castles</td>
+            <td>4172.5 63 1355.5</td>
+            <td>513 80 180.5</td>
+        </tr>
+        <tr class="coord-row">
+            <td>Bazinganite</td>
+            <td>10332.5 69 -2107.5</td>
+            <td>unknown</td>
+        </tr>
+
+    </table> {% endcomment %}
+
+    <br>
+    <div class="fineprint">OW coordinates represent town halls or central public buildings.</div>
+    <div class="fineprint">Nether coordinates represent town portals, if they exist.</div>
+
+    <!-- <div class="text2">Online players</div>
+    <div class="text3">
+        text number 3.
+    </div> -->
+
+    <!-- <div id="listBttn"><div>refresh</div></div> -->
+
+    <script>
+        let mode = "copy";
+
+        const actionBttn = document.getElementById("place-action");
+        actionBttn.addEventListener('click', function(event) {
+            if (mode == "copy") {
+                actionBttn.innerHTML = "TP Mode";
+                mode = "tp";
+            } else {
+                actionBttn.innerHTML = "Copy Mode";
+                mode = "copy";
+            }
+        });
+
+        const owBttns = document.querySelectorAll('.ow-coords, .nether-coords');
+        owBttns.forEach(bttn => {
+            bttn.addEventListener('click', () => {
+                if (mode == "copy") {
+                    const coords = bttn.querySelector('.copyable').textContent;
+                    navigator.clipboard.writeText(coords).then(() => {
+                        const originalText = bttn.innerHTML;
+                        bttn.innerHTML = 'Copied!';
+                        setTimeout(() => {
+                            bttn.innerHTML = originalText;
+                        }, 1500);
+                    }).catch(err => {
+                        console.error("Clipboard write failed: ", err);
+                    });
+                } else {
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    fetch('/tp/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify({
+                            tpdest: bttn.dataset.locationId, //MUST VALIDATE+SANITIZE COORDS IN BACKEND
+                        })
+                    })
+                    .then(raw => raw.json())
+                    .then(resp => {
+                        if (resp.status == 'success') {
+                            //alert("yeah its feinberg yo");
+                        } else {
+                            alert("oopsie: " + resp.error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock content %}

@@ -3,25 +3,66 @@
     <head>
         <title>Pisscraft</title>
     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{% static 'css/global.css' %}">
     </head>
     <body>
         <div class="header">
             <div class="funny-title-text">Pisscraft.com</div>
 
-            <div class="nav-buttons">
-                <a href="/" class="dynmapBttn">Places</a>
-                <a href="/map" class="dynmapBttn">Dynmap</a>
-                <a href="https://map.pisscraft.com" target="_blank" class="dynmapBttn">Dynmap (new tab)</a>
+            <div class="nav-buttons mobile-hide">
+                <a href="/" class="navBttn">Home</a>
+                <a href="/places" class="navBttn">Places</a>
+                <div style="display: flex; flex-direction: row;">
+                    <a href="/map" class="navBttn" style="border-radius: 7px 0 0 7px">Dynmap</a>
+                    <a href="https://map.pisscraft.com" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
+                </div>
             </div>
 
             {% if user.is_authenticated %}
-            <a href="/users/logout" class="dynmapBttn">Log out</a>
+            <a href="/users/logout" class="navBttn">Log out</a>
             {% else %}
-            <a href="/users/login" class="dynmapBttn">Log in</a>
+            <a href="/users/login" class="navBttn">Log in</a>
             {% endif %}
         </div>
-{% block content %}
-{% endblock content %}
+        <div class="nav-buttons desktop-hide">
+            <a href="/" class="navBttn">Home</a>
+            <a href="/places" class="navBttn">Places</a>
+            <div style="display: flex; flex-direction: row;">
+                <a href="/map" class="navBttn" style="border-radius: 7px 0 0 7px">Dynmap</a>
+                <a href="https://map.pisscraft.com" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
+            </div>
+        </div>
+        <div class="content">
+            {% block content %}
+            {% endblock content %}
+        </div>
+        {% block contentFull %}
+        {% endblock contentFull %}
+
+        <script>
+        function say_hello() {
+            // Django requires a CSRF token for POST requests
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        //    const formData = new FormData();
+        //    formData.append('action', actionName);
+
+            fetch('/hi/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("Success: " + data.mc_response);
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
+        }
+        </script>
     </body>
 </html>
