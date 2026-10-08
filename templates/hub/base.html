@@ -39,30 +39,5 @@
         </div>
         {% block contentFull %}
         {% endblock contentFull %}
-
-        <script>
-        function say_hello() {
-            // Django requires a CSRF token for POST requests
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        //    const formData = new FormData();
-        //    formData.append('action', actionName);
-
-            fetch('/hi/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.status === 'success') {
-                    alert("Success: " + data.mc_response);
-                } else {
-                    alert("Error: " + data.error);
-                }
-            });
-        }
-        </script>
     </body>
 </html>

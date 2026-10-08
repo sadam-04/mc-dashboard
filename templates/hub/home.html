@@ -3,6 +3,72 @@
 
 {% block content %}
     <div class="sub-header">
-        feinberg: yo
+        <div class="text2">Dashboard</div>
+        <button onclick="update_stats()">refresh</button>
     </div>
+    
+    <div id="motd"></div>
+    <br />
+    
+    <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 20px; border-radius: 12px; min-height: 200px; border: 1px solid #888;">
+        <div id="loading-msg">Loading server info...</div>
+        <button id="hello_bttn" onclick="say_hello()" style="display: none; height: fit-content;">Wave</button>
+    </div>
+
+    {% csrf_token %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            update_stats();
+        });
+
+        function update_stats() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            let res = fetch('/status/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                }
+            })
+            .then(raw => raw.json())
+            .then(resp => {
+                let players = JSON.parse(resp.players);
+                let motd = resp.motd;
+                
+                console.log("Players:", players)
+
+                if (players.length == 0) {
+                    document.getElementById("loading-msg").innerHTML = "There are currently no players online";
+                    document.getElementById("hello_bttn").style.display = "none";
+                } else {
+                    document.getElementById("loading-msg").innerHTML = "Online players: " + players;
+                    document.getElementById("hello_bttn").style.display = "block";
+                }
+                document.getElementById("motd").innerHTML = motd;
+            });
+        }
+
+        function say_hello() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        //    const formData = new FormData();
+        //    formData.append('action', actionName);
+
+            fetch('/hi/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("Success: " + data.mc_response);
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
+        }
+    </script>
 {% endblock content %}

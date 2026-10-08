@@ -205,6 +205,11 @@ iframe {
     flex-grow: 1;
 }
 
+#motd {
+    font-style: italic;
+    color: #888;
+}
+
 @media screen and (max-width: 800px) {
   body {
     gap: 8px;

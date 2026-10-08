@@ -5,9 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render
-from mcrcon import MCRcon
-
 from pisscraft import settings
+
+from mcrcon import MCRcon
+from mcsmp.client import Client
+import asyncio
+
 
 @login_required
 def home(request):
@@ -19,12 +22,12 @@ def places(request):
     return render(request, 'hub/places.html')
 
 @login_required
-def map(request):
+def map_view(request):
     return render(request, 'hub/map.html')
 
 @login_required
 @require_POST
-def say_hello(request):
+def say_hello_view(request):
     django_user = request.user.username
     mc_username = settings.MC_USER_ASSOCS.get(django_user)
     if not mc_username:
@@ -88,3 +91,19 @@ def teleport(request):
             return JsonResponse({"status": "success", "mc_response": response})
     except Exception as e:
         return JsonResponse({"status": "failure", "error": f"Rcon connection failed: {str(e)}"},  status=500)
+
+@login_required
+@require_POST
+async def status_view(request):
+    # print("yoooooo")
+    client = Client("10.6.7.32", 25585, "WwgKvYU8loquvYDLTXyn7k0DAbgA400w7xQplfVD")
+    await client.connect()
+    players = await client.players.get()
+    motd = await client.server_settings.motd()
+    namesList = list(map(lambda p: p.name, players))
+    # print("Player list: ", namesList)
+    return JsonResponse({
+        "players": json.dumps(namesList),
+        "motd": motd
+    })
+    
