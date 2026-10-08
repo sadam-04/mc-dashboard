@@ -4,7 +4,7 @@
 {% block content %}
     <div class="sub-header">
         <div class="text2">Dashboard</div>
-        <button onclick="update_stats()">refresh</button>
+        <button onclick="update_stats()" class="navBttn">refresh</button>
     </div>
     
     <div id="motd"></div>
@@ -12,12 +12,14 @@
     
     <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 20px; border-radius: 12px; min-height: 200px; border: 1px solid #888;">
         <div id="loading-msg">Loading server info...</div>
-        <button id="hello_bttn" onclick="say_hello()" style="display: none; height: fit-content;">Wave</button>
+        <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none; height: fit-content;">Wave</button>
     </div>
 
     {% csrf_token %}
 
     <script>
+        let playerCount = 0;
+
         document.addEventListener('DOMContentLoaded', () => {
             update_stats();
         });
@@ -38,7 +40,9 @@
                 
                 console.log("Players:", players)
 
-                if (players.length == 0) {
+                playerCount = players.length;
+
+                if (playerCount == 0) {
                     document.getElementById("loading-msg").innerHTML = "There are currently no players online";
                     document.getElementById("hello_bttn").style.display = "none";
                 } else {
@@ -64,9 +68,13 @@
             .then(response => response.json())
             .then(data => {
                 if(data.status === 'success') {
-                    alert("Success: " + data.mc_response);
+                    if (playerCount == 1) {
+                        alert("You waved to 1 player");
+                    } else {
+                        alert("You waved to " + playerCount + " players");
+                    }
                 } else {
-                    alert("Error: " + data.error);
+                    // alert("Error: " + data.error);
                 }
             });
         }

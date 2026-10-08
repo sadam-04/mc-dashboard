@@ -100,6 +100,7 @@ async def status_view(request):
     await client.connect()
     players = await client.players.get()
     motd = await client.server_settings.motd()
+    await client.close()
     namesList = list(map(lambda p: p.name, players))
     # print("Player list: ", namesList)
     return JsonResponse({

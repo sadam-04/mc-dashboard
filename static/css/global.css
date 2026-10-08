@@ -83,6 +83,17 @@ body {
     padding: 6px 16px;
 }
 
+.login-form {
+    /* border-radius: 12px; */
+    /* border: 1px solid #888; */
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
 .navBttn {
     all: unset;
     cursor: pointer;
