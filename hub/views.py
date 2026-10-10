@@ -33,20 +33,21 @@ def map_view(request):
 @login_required
 @require_POST
 def say_hello_view(request):
-    django_user = request.user.username
-    # mc_username = settings.MC_USER_ASSOCS.get(django_user)
-    mc_username = PlayerProfile.objects.get(user=request.user).mc_username
-    if not mc_username:
-        return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
-
-    cmd = f"tellraw @a \"{mc_username} waved to you\""
-
     try:
-        with MCRcon(settings.MC_IP, settings.RCON_PW, settings.RCON_PORT) as svr:
+
+    # django_user = request.user.username
+    # mc_username = settings.MC_USER_ASSOCS.get(django_user)
+        mc_username = PlayerProfile.objects.get(user=request.user).mc_username
+        if not mc_username:
+            return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
+
+        cmd = f"tellraw @a \"{mc_username} waved to you\""
+
+        with MCRcon(settings.MC_IP, settings.MC_RCON_PW, settings.MC_RCON_PORT) as svr:
             response = svr.command(cmd)
             return JsonResponse({"status": "success", "mc_response": response})
     except Exception as e:
-        return JsonResponse({"status": "failure", "error": "Rcon connection failed: {str(e)}"},  status=500)
+        return JsonResponse({"status": "failure", "error": f"Rcon connection failed: {str(e)}"},  status=500)
 
 @login_required
 @require_POST

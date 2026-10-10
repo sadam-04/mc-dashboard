@@ -68,6 +68,7 @@
                     // onlinePlayerHeader.innerHTML = "Online players: " + players;
                     noPlayersMsg.style.display = "none";
                     //build player list
+                    playerList.replaceChildren()
                     for (let p of players) {
                         let pDiv = document.createElement("div");
                         let pName = document.createElement("div");
@@ -114,7 +115,7 @@
                         alert("You waved to " + playerCount + " players");
                     }
                 } else {
-                    // alert("Error: " + data.error);
+                    alert("Error: " + data.error);
                 }
             });
         }
