@@ -3,7 +3,6 @@ import random
 
 from django.core.cache import cache
 from django.views.decorators.http import require_POST
-from functools import wraps
 
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -45,27 +44,7 @@ def logout_view(request):
 #     form = MySignupForm()
 #     return render(request, 'users/new_user_a.html', {'form': form})
 
-def force_json_errors(view_func):
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        try:
-            return view_func(request, *args, **kwargs)
-        except Exception as e:
-            # Log the error so you don't lose the traceback in your server logs
-            # logger.exception("JSON view encountered an error: %s", e)
-            
-            # Return a standardized JSON error response
-            return JsonResponse(
-                {
-                    "error": "Internal Server Error",
-                    "message": str(e) if True else "An unexpected error occurred." # Set to False in production
-                },
-                status=500
-            )
-    return _wrapped_view
-
 @require_POST
-@force_json_errors
 async def create_pin_view(request):
     reqBody = json.loads(request.body)
     unverifiedMcUsername = reqBody.get('mcusername')
