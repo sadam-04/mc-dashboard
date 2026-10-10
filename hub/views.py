@@ -39,7 +39,7 @@ def say_hello_view(request):
     if not mc_username:
         return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
 
-    cmd = f"tellraw @a \"{mc_username} says hi!\""
+    cmd = f"tellraw @a \"{mc_username} waved to you\""
 
     try:
         with MCRcon('10.6.7.32', 'amoge', port=25575) as svr:
