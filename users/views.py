@@ -88,7 +88,7 @@ async def create_pin_view(request):
 
         # TODO send pin to player
         # with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
-        async with rconClient(settings.MC_IP, settings.MC_RCON_PW, settings.MC_RCON_PORT) as client:
+        async with rconClient(settings.MC_IP, settings.MC_RCON_PORT, settings.MC_RCON_PW) as client:
             await client.connect()
             send_pin_command = f'tellraw {unverifiedMcUsername} {{"text":"Your PIN is {pin}","color":"aqua"}}'
             await client.send_cmd(send_pin_command)
