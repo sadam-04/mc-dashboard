@@ -12,7 +12,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from mcsmp import Client
 import asyncio
 
-from mcrcon import MCRcon
+# from mcrcon import MCRcon
+from aiomcrcon import Client as rconClient
 
 from django.conf import settings
 
@@ -86,9 +87,12 @@ async def create_pin_view(request):
         cache.set(cache_key, pin, timeout=900)
 
         # TODO send pin to player
-        with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
+        # with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
+        with rconClient(settings.MC_IP, settings.MC_RCON_PW, settings.MC_RCON_PORT) as client:
+            await client.connect()
             send_pin_command = f'tellraw {unverifiedMcUsername} {{"text":"Your PIN is {pin}","color":"aqua"}}'
-            svr.command(send_pin_command)
+            await client.send_cmd(send_pin_command)
+            await client.close()
 
         print(f"new pin ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
 
