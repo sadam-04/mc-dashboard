@@ -1,11 +1,13 @@
 {% extends "hub/base.html" %}
 
 {% block content %}
-    <div style="display: flex; flex-direction: column; gap: 35px; margin-top: 15px">
+    {% load static %}
+
+    <div class="inner-wrapper">
         <div class="text2">Create new account</div>
         
         <div>
-            <div>Enter your minecraft username (case-sensitive)</div>
+            <div>Enter your minecraft username (case-sensitive i think)</div>
             <div style="display: flex; flex-direction: row; gap: 8px;">
                 <input type="text" id="mc-username" placeholder="Minecraft username" class="text-input"/>
                 <button onclick="verify_mc_user()" class="navBttn">Ok</button>
@@ -15,26 +17,55 @@
         {% comment %} <div id="pin-section" style="display: none; flex-direction: column; gap: 8px;">
             </div> {% endcomment %}
             
-            <form id="signup-section" method="POST" action="/users/new/" style="display: none; flex-direction: column;">
+        <form id="signup-section" method="POST" action="/users/new/">
+            {% comment %} <div style="display: flex; flex-direction: row; gap: 8px;"> {% endcomment %}
+                {% comment %} <input type="text" id="v-pin" placeholder="PIN" class="text-input"/> {% endcomment %}
+                {% comment %} <button onclick="check_pin()" class="navBttn">Ok</button> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+                
+            {% csrf_token %}
+            <div id="signup-pin-section" class="fade-in">
                 <div>Enter the pin whispered to you in-game</div>
-                {% comment %} <div style="display: flex; flex-direction: row; gap: 8px;"> {% endcomment %}
-                    {% comment %} <input type="text" id="v-pin" placeholder="PIN" class="text-input"/> {% endcomment %}
-                    {% comment %} <button onclick="check_pin()" class="navBttn">Ok</button> {% endcomment %}
-                    {% comment %} </div> {% endcomment %}
-                    
-                {% csrf_token %}
-                {{ form.as_p }}
-            <button type="submit" class="navBttn">Create</button>
+                {{ form.pin }}
+            </div>
+            {% comment %} {{ form.as_p }} {% endcomment %}
+            
+            <div id="signup-user-section" class="fade-in">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <div>Username:</div>
+                        {{ form.username }}
+                    </div>
+                    <div>
+                        <div>Password:</div>
+                        {{ form.password1 }}
+                    </div>
+                    <div>
+                        <div>Confirm Password:</div>
+                        {{ form.password2 }}
+                    </div>
+                </div>
+                
+                {{ form.mc_username }}
+                {{ form.mc_uuid }}
+                <button type="submit" class="navBttn">otay<img src="{% static 'img/aga.png' %}" style="width: 24px; height: 24px;" alt="a warm smile"></button>
+            </div>
         </form>
     </div>
 
     <script>
+        document.getElementById('signup-pin-section').querySelector('input').addEventListener('input', (event) => {
+            if (event.target.value.length == 4) {
+                document.getElementById('signup-user-section').classList.add('visible');
+            }
+        })
+
         // 
         function verify_mc_user() {
             const mcUsername = document.getElementById("mc-username").value;
             
             // const pinSection = document.getElementById("pin-section");
-            const signupSection = document.getElementById("signup-section");
+            // const signupSection = document.getElementById("signup-section");
 
             if (mcUsername == "") {
                 return;
@@ -58,7 +89,8 @@
             .then(resp => {
                 // console.log("YOOOOOOOOOOO status: " + resp.status);
                 if (resp.status == "success") {
-                    signupSection.style.display = "flex";
+                    document.getElementById('signup-pin-section').classList.add('visible');
+
 
                     // copy the mc-username entered in the first field into the hidden field in the MySignupForm form
                     // mcUsername = document.getElementById('mc-username').value;

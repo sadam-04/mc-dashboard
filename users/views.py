@@ -76,7 +76,7 @@ async def create_pin_view(request):
     if player_uuid == "":
         return JsonResponse({
             "status": "failure",
-            "error": "player not found",
+            "error": "player not found, are you logged into the server?",
         })
 
     pin = str(random.randint(1000, 9999))

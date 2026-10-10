@@ -9,7 +9,12 @@ from pisscraft import settings
 
 from mcrcon import MCRcon
 from mcsmp.client import Client
+
+from django.contrib.auth.models import User
+
 import asyncio
+
+from users.models import PlayerProfile
 
 
 @login_required
@@ -29,7 +34,8 @@ def map_view(request):
 @require_POST
 def say_hello_view(request):
     django_user = request.user.username
-    mc_username = settings.MC_USER_ASSOCS.get(django_user)
+    # mc_username = settings.MC_USER_ASSOCS.get(django_user)
+    mc_username = PlayerProfile.objects.get(user=request.user).mc_username
     if not mc_username:
         return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
 
@@ -77,11 +83,12 @@ def teleport(request):
 
     tpLoc = tpLocs.get(tpId)
 
-    django_user = request.user.username
-    mc_username = settings.MC_USER_ASSOCS.get(django_user)
+    # django_user = request.user.username
+    # mc_username = settings.MC_USER_ASSOCS.get(django_user)
+    mc_username = PlayerProfile.objects.get(user=request.user).mc_username
 
     if not mc_username:
-        return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
+        return JsonResponse({"status": "failure", "error": "i couldn't find your minecraft account oopsy"}, status=403)
 
     cmd = f"execute as {mc_username} in minecraft:{tpDim} run tp {mc_username} {tpLoc}"
 
@@ -96,17 +103,27 @@ def teleport(request):
 @require_POST
 async def status_view(request):
     # print("yoooooo")
-    client = Client("10.6.7.32", 25585, "WwgKvYU8loquvYDLTXyn7k0DAbgA400w7xQplfVD")
-    await client.connect()
-    players = await client.players.get()
-    motd = await client.server_settings.motd()
-    await client.close()
+    client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
+    try:
+        # print("##### START")
+        await client.connect()
+        players = await client.players.get()
+        motd = await client.server_settings.motd()
+        await client.close()
+        # print("###### END")
+    except RuntimeError as e:
+        # print("CREEEEEEEEEEEEEEEEEEEEEEEE")
+        return JsonResponse({
+            "status": "failure",
+            "error": str(e),
+        })
 
-    namesList = list(map(lambda p: p.name, players))
+    namesList = list(map(lambda p: (p.name, p.id), players))
     lastFormatterIdx = motd.rfind('§')
     chopped_motd = motd[lastFormatterIdx + 2:] if lastFormatterIdx != -1 else motd
     
     return JsonResponse({
+        "status": "success",
         "players": json.dumps(namesList),
         "motd": chopped_motd
     })

@@ -3,16 +3,19 @@
 
 {% block content %}
     <div class="sub-header">
-        <div class="text2">Status</div>
+        <div class="text2 flex-row">Status:&nbsp;<div id="status"></div></div>
         <button onclick="update_stats()" class="navBttn">refresh</button>
     </div>
     
     <div id="motd"></div>
     <br />
     
-    <div class="player-list">
-        <div id="loading-msg">Loading server info...</div>
-        <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none; height: fit-content;">Wave</button>
+    <div class="player-list-area">
+        <div id="player-list" class="flex-col">
+            <div id="no-players-msg">Loading...</div>
+            
+        </div>
+        <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none;">Wave</button>
     </div>
 
     {% csrf_token %}
@@ -23,6 +26,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             update_stats();
         });
+
+        const statusText = document.getElementById("status");
+        const noPlayersMsg = document.getElementById("no-players-msg");
+        const playerList = document.getElementById("player-list");
+        const helloBttn = document.getElementById("hello_bttn");
+        const motdText = document.getElementById("motd");
 
         function update_stats() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -35,21 +44,52 @@
             })
             .then(raw => raw.json())
             .then(resp => {
+                if (resp.status == "failure") {
+                    statusText.innerHTML = "Offline";
+                    statusText.style.color = "red";
+                    noPlayersMsg.innerHTML = "Server offline";
+                    return;
+                }
+
+                statusText.innerHTML = "Online";
+                statusText.style.color = "limegreen";
+
                 let players = JSON.parse(resp.players);
                 let motd = resp.motd;
-                
-                // console.log("Players:", players)
+
+                console.log("Players: " + players);
 
                 playerCount = players.length;
 
                 if (playerCount == 0) {
-                    document.getElementById("loading-msg").innerHTML = "There are currently no players online";
-                    document.getElementById("hello_bttn").style.display = "none";
+                    noPlayersMsg.innerHTML = "There are currently no players online";
+                    helloBttn.style.display = "none";
                 } else {
-                    document.getElementById("loading-msg").innerHTML = "Online players: " + players;
-                    document.getElementById("hello_bttn").style.display = "block";
+                    // onlinePlayerHeader.innerHTML = "Online players: " + players;
+                    noPlayersMsg.style.display = "none";
+                    //build player list
+                    for (let p of players) {
+                        let pDiv = document.createElement("div");
+                        let pName = document.createElement("div");
+                        let pImg = document.createElement("img");
+                        
+                        pDiv.classList.add("flex-row");
+                        pDiv.classList.add("player-list-entry");
+                        pDiv.style.alignItems = "center";
+                        pDiv.style.gap = "10px";
+                        pName.textContent = p[0];
+                        pImg.src = "https://mc-api.io/render/FACE/" + p[1] + "?size=256";
+                        pImg.style.width = "30px";
+                        
+
+                        pDiv.appendChild(pImg);
+                        pDiv.appendChild(pName);
+                        playerList.appendChild(pDiv);
+                    }
+
+                    helloBttn.style.display = "block";
                 }
-                document.getElementById("motd").innerHTML = motd;
+                motdText.innerHTML = motd;
             });
         }
 

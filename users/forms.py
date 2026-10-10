@@ -24,9 +24,16 @@ class MyLoginForm(AuthenticationForm):
 ))
 
 class MySignupForm(UserCreationForm):
-    pin = forms.CharField(max_length=4)
+    pin = forms.CharField(max_length=4, widget=forms.TextInput(attrs={'class': 'text-input', 'placeholder': 'PIN'}))
     mc_username = forms.CharField(widget=forms.HiddenInput())
     mc_uuid = forms.CharField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['username'].widget.attrs.update({'class': 'text-input'})
+        self.fields['password1'].widget.attrs.update({'class': 'text-input'})
+        self.fields['password2'].widget.attrs.update({'class': 'text-input'})
 
     def clean(self):
         cleaned_data = super().clean()
