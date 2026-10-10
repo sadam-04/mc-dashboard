@@ -1,0 +1,134 @@
+{% extends "hub/base.html" %}
+
+{% block content %}
+    <div style="display: flex; flex-direction: column; gap: 35px; margin-top: 15px">
+        <div class="text2">Create new account</div>
+        
+        <div>
+            <div>Enter your minecraft username (case-sensitive)</div>
+            <div style="display: flex; flex-direction: row; gap: 8px;">
+                <input type="text" id="mc-username" placeholder="Minecraft username" class="text-input"/>
+                <button onclick="verify_mc_user()" class="navBttn">Ok</button>
+            </div>
+        </div>
+        
+        {% comment %} <div id="pin-section" style="display: none; flex-direction: column; gap: 8px;">
+            </div> {% endcomment %}
+            
+            <form id="signup-section" method="POST" action="/users/new/" style="display: none; flex-direction: column;">
+                <div>Enter the pin whispered to you in-game</div>
+                {% comment %} <div style="display: flex; flex-direction: row; gap: 8px;"> {% endcomment %}
+                    {% comment %} <input type="text" id="v-pin" placeholder="PIN" class="text-input"/> {% endcomment %}
+                    {% comment %} <button onclick="check_pin()" class="navBttn">Ok</button> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                    
+                {% csrf_token %}
+                {{ form.as_p }}
+            <button type="submit" class="navBttn">Create</button>
+        </form>
+    </div>
+
+    <script>
+        // 
+        function verify_mc_user() {
+            const mcUsername = document.getElementById("mc-username").value;
+            
+            // const pinSection = document.getElementById("pin-section");
+            const signupSection = document.getElementById("signup-section");
+
+            if (mcUsername == "") {
+                return;
+            }
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // send username to api endpoint which sends message to player
+            //console.log("GOOOOOOOOOOOOO")
+            fetch("/users/api/createpin/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    mcusername: mcUsername,
+                })
+            })
+            .then(raw => raw.json())
+            .then(resp => {
+                // console.log("YOOOOOOOOOOO status: " + resp.status);
+                if (resp.status == "success") {
+                    signupSection.style.display = "flex";
+
+                    // copy the mc-username entered in the first field into the hidden field in the MySignupForm form
+                    // mcUsername = document.getElementById('mc-username').value;
+                    document.getElementById('id_mc_username').value = mcUsername;
+                    console.log("Set username to: " + mcUsername);
+
+                    document.getElementById('id_mc_uuid').value = resp.player_uuid;
+
+                    // alert("A PIN was sent to " + mcUsername);
+                } else {
+                    alert("uh oh: " + resp.error);
+                }
+            });
+        }
+
+        {% comment %} function check_pin() {
+            const vPin = document.getElementById("v-pin").value;
+            const signupSection = document.getElementById("signup-section");
+
+            if (vPin == "") {
+                return;
+            }
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch("/users/api/verifypin/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    pin: vPin,
+                })
+            })
+            .then(raw => raw.json())
+            .then(resp => {
+                if (resp.status == "success") {
+                    // show normal user creation form
+                    signupSection.style.display = "flex";
+                } else {
+                    alert("wrong pin");
+                }
+            })
+        } {% endcomment %}
+
+        function create_user() {
+
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch("/users/api/createuser/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    username: newUsername,
+                    password: newPassword
+                })
+            })
+            .then(raw => raw.json())
+            .then(resp => {
+                if (resp.status == "success") {
+                    window.location.href = "/";
+                } else {
+                    alert("signup failed");
+                }
+            });
+        }
+    </script>
+{% endblock content %}

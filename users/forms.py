@@ -1,22 +1,58 @@
-from django.contrib.auth.forms import AuthenticationForm, UsernameField
-
+from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
 from django import forms
+from django.core.cache import cache
+from .models import PlayerProfile
 
+# from users.models import MyUser
 
-class UserLoginForm(AuthenticationForm):
+class MyLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
+        super(MyLoginForm, self).__init__(*args, **kwargs)
 
     username = UsernameField(widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
-            'placeholder': 'yo',
+            'class': 'text-input',
+            'placeholder': 'username',
             'id': 'username-field'
         }))
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={
-            'class': 'form-control',
-            'placeholder': 'yo',
+            'class': 'text-input',
+            'placeholder': 'password',
             'id': 'password-field',
         }
 ))
+
+class MySignupForm(UserCreationForm):
+    pin = forms.CharField(max_length=4)
+    mc_username = forms.CharField(widget=forms.HiddenInput())
+    mc_uuid = forms.CharField(widget=forms.HiddenInput())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        mc_username = cleaned_data.get("mc_username")
+        # mc_uuid = cleaned_data.get("mc_uuid")
+        
+        pin = cleaned_data.get("pin")
+
+        if mc_username and pin:
+            cache_key = f"mc_registration_{mc_username}"
+            stored_pin = cache.get(cache_key)
+
+            if not stored_pin:
+                self.add_error('pin', "pin expired i think")
+            elif stored_pin != pin:
+                self.add_error('pin', "wrong pin i think")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        
+        if commit:
+            user.save()
+
+            PlayerProfile.objects.create(user=user, mc_username=self.cleaned_data['mc_username'], mc_uuid=self.cleaned_data['mc_uuid'])
+            # Invalidate the PIN so it can't be reused
+            cache.delete(f"mc_registration_{self.cleaned_data['mc_username']}")
+        return user

@@ -101,10 +101,13 @@ async def status_view(request):
     players = await client.players.get()
     motd = await client.server_settings.motd()
     await client.close()
+
     namesList = list(map(lambda p: p.name, players))
-    # print("Player list: ", namesList)
+    lastFormatterIdx = motd.rfind('§')
+    chopped_motd = motd[lastFormatterIdx + 2:] if lastFormatterIdx != -1 else motd
+    
     return JsonResponse({
         "players": json.dumps(namesList),
-        "motd": motd
+        "motd": chopped_motd
     })
     

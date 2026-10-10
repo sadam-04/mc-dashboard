@@ -3,14 +3,14 @@
 
 {% block content %}
     <div class="sub-header">
-        <div class="text2">Dashboard</div>
+        <div class="text2">Status</div>
         <button onclick="update_stats()" class="navBttn">refresh</button>
     </div>
     
     <div id="motd"></div>
     <br />
     
-    <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 20px; border-radius: 12px; min-height: 200px; border: 1px solid #888;">
+    <div class="player-list">
         <div id="loading-msg">Loading server info...</div>
         <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none; height: fit-content;">Wave</button>
     </div>
@@ -38,7 +38,7 @@
                 let players = JSON.parse(resp.players);
                 let motd = resp.motd;
                 
-                console.log("Players:", players)
+                // console.log("Players:", players)
 
                 playerCount = players.length;
 

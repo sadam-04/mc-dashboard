@@ -9,7 +9,19 @@
 
 <form class="login-form" method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="navBttn">Log In</button>
+  
+  {% for field in form %}
+    {{ field }}
+    {% if field.errors %}
+      <div class="login-field-error">{{ field.errors }}</div>
+    {% endif %}
+  {% endfor %}
+
+  <button type="submit" class="navBttn" style="margin-top: 20px;">Log In</button>
 </form>
+
+<div class="text3">or</div>
+
+<a class="navBttn" href="/users/new/" style="margin-top: 12px;">Create Account</a>
+
 {% endblock content %}
