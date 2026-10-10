@@ -42,7 +42,7 @@ def say_hello_view(request):
     cmd = f"tellraw @a \"{mc_username} waved to you\""
 
     try:
-        with MCRcon('10.6.7.32', 'amoge', port=25575) as svr:
+        with MCRcon(settings.MC_IP, settings.RCON_PW, settings.RCON_PORT) as svr:
             response = svr.command(cmd)
             return JsonResponse({"status": "success", "mc_response": response})
     except Exception as e:
@@ -93,7 +93,7 @@ def teleport(request):
     cmd = f"execute as {mc_username} in minecraft:{tpDim} run tp {mc_username} {tpLoc}"
 
     try:
-        with MCRcon('10.6.7.32', 'amoge', port=25575) as svr:
+        with MCRcon(settings.MC_IP, settings.MC_RCON_PW, settings.MC_RCON_PORT) as svr:
             response = svr.command(cmd)
             return JsonResponse({"status": "success", "mc_response": response})
     except Exception as e:
