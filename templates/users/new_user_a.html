@@ -85,7 +85,10 @@
                     mcusername: mcUsername,
                 })
             })
-            .then(raw => raw.json())
+            .then(raw => {
+                console.log("raw: " + raw);
+                return raw.json()
+            })
             .then(resp => {
                 // console.log("YOOOOOOOOOOO status: " + resp.status);
                 if (resp.status == "success") {
