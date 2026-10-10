@@ -85,9 +85,14 @@
                     mcusername: mcUsername,
                 })
             })
-            .then(raw => {
-                console.log("raw: " + raw);
-                return raw.json()
+            .then(async raw => {
+                // Check if the response is actually JSON before parsing
+                const contentType = raw.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    const textError = await raw.text();
+                    throw new Error("Server returned non-JSON response: " + textError.substring(0, 100));
+                }
+                return raw.json();
             })
             .then(resp => {
                 // console.log("YOOOOOOOOOOO status: " + resp.status);

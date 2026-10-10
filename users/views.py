@@ -1,5 +1,6 @@
 import json
 import random
+import traceback
 
 from django.core.cache import cache
 from django.views.decorators.http import require_POST
@@ -46,54 +47,62 @@ def logout_view(request):
 
 @require_POST
 async def create_pin_view(request):
-    reqBody = json.loads(request.body)
-    unverifiedMcUsername = reqBody.get('mcusername')
+    try:
+        reqBody = json.loads(request.body)
+        unverifiedMcUsername = reqBody.get('mcusername')
 
-    # check if a player profile already exists for this mc account
-    profileConflict = await PlayerProfile.objects.filter(mc_username=unverifiedMcUsername).aexists()
-    if profileConflict:
+        # check if a player profile already exists for this mc account
+        profileConflict = await PlayerProfile.objects.filter(mc_username=unverifiedMcUsername).aexists()
+        if profileConflict:
+            return JsonResponse({
+                "status": "failure",
+                "error": "profile already exists",
+            })
+
+        # overview: open connection, check if player is online, then generate pin, send to player, close connection
+
+        client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
+        await client.connect()
+        players = await client.players.get()
+        await client.close()
+
+        # print("Player list: " + str(players))
+
+        player_uuid = ""
+        for p in players:
+            if p.name == unverifiedMcUsername:
+                player_uuid = p.id
+            # else:
+            #     print("Player not a match. name=" + str(p.name) + ", looking for " + unverifiedMcUsername)
+
+        if player_uuid == "":
+            return JsonResponse({
+                "status": "failure",
+                "error": "player not found, are you logged into the server?",
+            })
+
+        pin = str(random.randint(1000, 9999))
+        cache_key = f"mc_registration_{unverifiedMcUsername}"
+        cache.set(cache_key, pin, timeout=900)
+
+        # TODO send pin to player
+        with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
+            send_pin_command = f'tellraw {unverifiedMcUsername} {{"text":"Your PIN is {pin}","color":"aqua"}}'
+            svr.command(send_pin_command)
+
+        print(f"new pin ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
+
+        return JsonResponse({
+            "status": "success",
+            "player_uuid": player_uuid,
+        }) 
+    except Exception as e:
+        traceback.print_exc()
         return JsonResponse({
             "status": "failure",
-            "error": "profile already exists",
-        })
-
-    # overview: open connection, check if player is online, then generate pin, send to player, close connection
-
-    client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
-    await client.connect()
-    players = await client.players.get()
-    await client.close()
-
-    # print("Player list: " + str(players))
-
-    player_uuid = ""
-    for p in players:
-        if p.name == unverifiedMcUsername:
-            player_uuid = p.id
-        # else:
-        #     print("Player not a match. name=" + str(p.name) + ", looking for " + unverifiedMcUsername)
-
-    if player_uuid == "":
-        return JsonResponse({
-            "status": "failure",
-            "error": "player not found, are you logged into the server?",
-        })
-
-    pin = str(random.randint(1000, 9999))
-    cache_key = f"mc_registration_{unverifiedMcUsername}"
-    cache.set(cache_key, pin, timeout=900)
-
-    # TODO send pin to player
-    with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
-        send_pin_command = f'tellraw {unverifiedMcUsername} {{"text":"Your PIN is {pin}","color":"aqua"}}'
-        svr.command(send_pin_command)
-
-    print(f"new pin ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
-
-    return JsonResponse({
-        "status": "success",
-        "player_uuid": player_uuid,
-    }) 
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }, status=500)
 
 def signup_view(request):
     if request.method == "POST":
