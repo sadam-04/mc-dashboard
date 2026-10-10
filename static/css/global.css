@@ -220,17 +220,17 @@ table, th, tr {
     background-color: #383838;
 }
 
-#place-action {
+/* #place-action {
     padding: 6px 10px;
     border-radius: 5px;
     background-color: #202020;
     cursor: pointer;
     height: fit-content;
-}
+} */
 
-#place-action:hover {
+/* #place-action:hover {
     background-color: #383838;
-}
+} */
 
 .sub-header {
     display: flex;
@@ -333,9 +333,9 @@ iframe {
     flex-grow: 1;
   }
 
-  #place-action {
+  /* #place-action {
     background-color: #303030;
-  }
+  } */
 
   .login-form {
     width: 90%;
