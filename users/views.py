@@ -40,7 +40,7 @@ def login_view(request):
                 login(request, user)
                 return redirect('home')
         else:
-            logger.warning("Received a POSTed login form that is NOT VALID" + form.errors)
+            logger.warning("Received a POSTed login form that is NOT VALID" + str(form.errors))
     else:
         logger.info("Handling a request for the blank login page")
         form = AuthenticationForm()
@@ -128,7 +128,7 @@ def signup_view(request):
             login(request, user)
             return redirect('home')
         else:
-            logger.error("Request for user creation contained form data that is NOT VALID: " + form.errors)
+            logger.error("Request for user creation contained form data that is NOT VALID: " + str(form.errors))
             return render(request, 'users/new_user_a.html', {"form": form})
             # return JsonResponse({"status": "failure", "error": "Bad form data: " + str(form.errors)}, status=400)
     else:
