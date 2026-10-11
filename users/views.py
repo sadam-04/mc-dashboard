@@ -94,8 +94,10 @@ async def create_pin_view(request):
                 "error": "player not found, are you logged into the server?",
             })
 
-        pin = str(random.randint(1000, 9999))
         cache_key = f"mc_registration_{unverifiedMcUsername}"
+        cache.delete(f"mc_registration_{unverifiedMcUsername}")
+        
+        pin = str(random.randint(1000, 9999))
         cache.set(cache_key, pin, timeout=900)
 
         # save the player's uuid to cache so it can be grabbed later if/when the pissuser object is being created
