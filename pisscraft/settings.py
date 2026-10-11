@@ -79,6 +79,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pisscraft.wsgi.application'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "my_cache_table",
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
