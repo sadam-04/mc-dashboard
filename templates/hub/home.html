@@ -11,8 +11,8 @@
     <br />
     
     <div class="player-list-area">
+        <div id="no-players-msg" style="display: none;">There are currently no players online.</div>
         <div id="player-list" class="flex-col">
-            <div id="no-players-msg">Loading...</div>
             
         </div>
         <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none;">Wave</button>
@@ -63,7 +63,8 @@
 
                 playerList.replaceChildren()
                 if (playerCount == 0) {
-                    noPlayersMsg.innerHTML = "There are currently no players online";
+                    // noPlayersMsg.innerHTML = "There are currently no players online";
+                    noPlayersMsg.style.display = "flex";
                     helloBttn.style.display = "none";
                 } else {
                     // onlinePlayerHeader.innerHTML = "Online players: " + players;

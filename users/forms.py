@@ -37,6 +37,8 @@ class MySignupForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         self.fields['username'].widget.attrs.update({'class': 'text-input'})
+        self.fields['username'].widget.attrs.update({'placeholder': 'MC Username'})
+                        
         self.fields['password1'].widget.attrs.update({'class': 'text-input'})
         self.fields['password2'].widget.attrs.update({'class': 'text-input'})
 
