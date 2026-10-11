@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PlayerProfile
+from .models import PissUser
 
 # Register your models here.
-admin.site.register(PlayerProfile)
+admin.site.register(PissUser)

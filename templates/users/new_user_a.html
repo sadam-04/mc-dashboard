@@ -6,18 +6,25 @@
     <div class="inner-wrapper">
         <div class="text2">Create new account</div>
         
-        <div>
+        {% comment %} <div>
             <div>Enter your minecraft username (case-sensitive i think)</div>
             <div style="display: flex; flex-direction: row; gap: 8px;">
                 <input type="text" id="mc-username" placeholder="Minecraft username" class="text-input"/>
-                <button onclick="verify_mc_user()" class="navBttn">Ok</button>
+                
             </div>
-        </div>
+        </div> {% endcomment %}
         
         {% comment %} <div id="pin-section" style="display: none; flex-direction: column; gap: 8px;">
             </div> {% endcomment %}
             
         <form id="signup-section" method="POST" action="/users/new/">
+
+            <div>
+                <div>Username: (can be the same as your mc username or something else. Use this to log into this website)</div>
+                {{ form.username }}
+                <button onclick="verify_mc_user()" class="navBttn">Ok</button>
+            </div>
+
             {% comment %} <div style="display: flex; flex-direction: row; gap: 8px;"> {% endcomment %}
                 {% comment %} <input type="text" id="v-pin" placeholder="PIN" class="text-input"/> {% endcomment %}
                 {% comment %} <button onclick="check_pin()" class="navBttn">Ok</button> {% endcomment %}
@@ -26,16 +33,13 @@
             {% csrf_token %}
             <div id="signup-pin-section" class="fade-in">
                 <div>Enter the pin whispered to you in-game</div>
+                <div style="color: red;">{{ form.pin.errors }}</div>
                 {{ form.pin }}
             </div>
             {% comment %} {{ form.as_p }} {% endcomment %}
             
             <div id="signup-user-section" class="fade-in">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <div>
-                        <div>Username: (can be the same as your mc username or something else. Use this to log into this website)</div>
-                        {{ form.username }}
-                    </div>
                     <div>
                         <div>Password:</div>
                         {{ form.password1 }}
@@ -46,14 +50,26 @@
                     </div>
                 </div>
                 
-                {{ form.mc_username }}
-                {{ form.mc_uuid }}
                 <button type="submit" class="navBttn">otay<img src="{% static 'img/aga.png' %}" style="width: 24px; height: 24px;" alt="a warm smile"></button>
             </div>
         </form>
+
+        {% comment %} {% if form.errors %}
+        <div style="color: red; font-style: bold;">
+            {{ form.errors }}
+        </div>
+        {% endif %} {% endcomment %}
+        <div>
+        
     </div>
 
     <script>
+        if (document.getElementById('id_pin').value != "") {
+            // skip the procedural fade in because the user prob just tried submitting but there are errors now
+            document.getElementById('signup-pin-section').classList.add('visible');
+            document.getElementById('signup-user-section').classList.add('visible');            
+        }
+
         document.getElementById('signup-pin-section').querySelector('input').addEventListener('input', (event) => {
             if (event.target.value.length == 4) {
                 document.getElementById('signup-user-section').classList.add('visible');
@@ -62,12 +78,12 @@
 
         // 
         function verify_mc_user() {
-            const mcUsername = document.getElementById("mc-username").value;
+            const username = document.getElementById("id_username").value;
             
             // const pinSection = document.getElementById("pin-section");
             // const signupSection = document.getElementById("signup-section");
 
-            if (mcUsername == "") {
+            if (username == "") {
                 return;
             }
 
@@ -82,7 +98,7 @@
                     'X-CSRFToken': csrfToken,
                 },
                 body: JSON.stringify({
-                    mcusername: mcUsername,
+                    username: username,
                 })
             })
             .then(async raw => {
@@ -102,10 +118,10 @@
 
                     // copy the mc-username entered in the first field into the hidden field in the MySignupForm form
                     // mcUsername = document.getElementById('mc-username').value;
-                    document.getElementById('id_mc_username').value = mcUsername;
-                    console.log("Set username to: " + mcUsername);
+                    // document.getElementById('id_mc_username').value = mcUsername;
+                    // console.log("Set username to: " + mcUsername);
 
-                    document.getElementById('id_mc_uuid').value = resp.player_uuid;
+                    // document.getElementById('id_mc_uuid').value = resp.player_uuid;
 
                     // alert("A PIN was sent to " + mcUsername);
                 } else {
@@ -145,9 +161,7 @@
             })
         } {% endcomment %}
 
-        function create_user() {
-
-
+        {% comment %} function create_user() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
             fetch("/users/api/createuser/", {
@@ -157,7 +171,8 @@
                     'X-CSRFToken': csrfToken,
                 },
                 body: JSON.stringify({
-                    username: newUsername,
+
+                    username: ,
                     password: newPassword
                 })
             })
@@ -169,6 +184,6 @@
                     alert("signup failed");
                 }
             });
-        }
+        } {% endcomment %}
     </script>
 {% endblock content %}

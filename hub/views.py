@@ -14,7 +14,8 @@ from django.contrib.auth.models import User
 
 import asyncio
 
-from users.models import PlayerProfile
+# from users.models import PlayerProfile
+from users.models import PissUser
 
 import logging
 
@@ -45,7 +46,7 @@ def say_hello_view(request):
 
     # django_user = request.user.username
     # mc_username = settings.MC_USER_ASSOCS.get(django_user)
-        mc_username = PlayerProfile.objects.get(user=request.user).mc_username
+        mc_username = request.user.username
         if not mc_username:
             return JsonResponse({"status": "failure", "error": "No Minecraft account linked."}, status=403)
 
@@ -100,11 +101,11 @@ def teleport(request):
 
         # django_user = request.user.username
         # mc_username = settings.MC_USER_ASSOCS.get(django_user)
-        mc_username = PlayerProfile.objects.get(user=request.user).mc_username
+        mc_username = request.user.username
 
-        if not mc_username:
-            logger.error(f"No PlayerProfile object found for this user ({str(request.user)})")
-            return JsonResponse({"status": "failure", "error": "i couldn't find your minecraft account oopsy"}, status=403)
+        # if not mc_username:
+        #     logger.error(f"No PlayerProfile object found for this user ({str(request.user)})")
+        #     return JsonResponse({"status": "failure", "error": "i couldn't find your minecraft account oopsy"}, status=403)
 
         cmd = f"execute as {mc_username} in minecraft:{tpDim} run tp {mc_username} {tpLoc}"
 
