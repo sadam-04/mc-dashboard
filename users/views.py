@@ -108,7 +108,7 @@ async def create_pin_view(request):
             await client.send_cmd(send_pin_command)
             await client.close()
 
-        print(f"new pin ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
+        logger.info(f"new PIN ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
 
         return JsonResponse({
             "status": "success",
