@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
@@ -26,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ['pisscraft.com', '10.6.7.32']
+ALLOWED_HOSTS = ['pisscraft.com', '10.6.7.32', 'localhost']
 
 
 # Application definition
@@ -188,7 +192,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_URL = 'login_view'
 
-# AUTH_USER_MODEL = 'users.MyUser'
+AUTH_USER_MODEL = 'users.PissUser'
 
 # MC_USER_ASSOCS = {
 #     'adam': 'sadam_official',
@@ -198,5 +202,5 @@ MC_IP = os.environ.get('MC_SERVER_HOST')
 MC_PORT = os.environ.get('MC_SERVER_SMP_PORT')
 MC_SMP_TOKEN = os.environ.get('MC_SERVER_SMP_PW')
 
-MC_RCON_PORT = os.environ.get('MC_SERVER_RCON_PORT')
+MC_RCON_PORT = int(os.environ.get('MC_SERVER_RCON_PORT'))
 MC_RCON_PW = os.environ.get('MC_SERVER_RCON_PW')

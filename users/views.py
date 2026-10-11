@@ -18,7 +18,8 @@ from aiomcrcon import Client as rconClient
 from django.conf import settings
 
 from users.forms import MySignupForm
-from users.models import PlayerProfile
+# from users.models import PlayerProfile
+from users.models import PissUser
 
 import logging
 
@@ -61,14 +62,14 @@ async def create_pin_view(request):
     logger.info("Processing request for a new signup PIN")
     try:
         reqBody = json.loads(request.body)
-        unverifiedMcUsername = reqBody.get('mcusername')
+        unverifiedMcUsername = reqBody.get('username')
 
         # check if a player profile already exists for this mc account
-        profileConflict = await PlayerProfile.objects.filter(mc_username=unverifiedMcUsername).aexists()
+        profileConflict = await PissUser.objects.filter(username=unverifiedMcUsername).aexists()
         if profileConflict:
             return JsonResponse({
                 "status": "failure",
-                "error": "profile already exists",
+                "error": "user already exists",
             })
 
         # overview: open connection, check if player is online, then generate pin, send to player, close connection
@@ -85,7 +86,7 @@ async def create_pin_view(request):
             if p.name == unverifiedMcUsername:
                 player_uuid = p.id
             # else:
-            #     print("Player not a match. name=" + str(p.name) + ", looking for " + unverifiedMcUsername)
+                # print("Player not a match. name=" + str(p.name) + ", looking for " + unverifiedMcUsername)
 
         if player_uuid == "":
             return JsonResponse({
@@ -97,7 +98,9 @@ async def create_pin_view(request):
         cache_key = f"mc_registration_{unverifiedMcUsername}"
         cache.set(cache_key, pin, timeout=900)
 
-        # TODO send pin to player
+        # save the player's uuid to cache so it can be grabbed later if/when the pissuser object is being created
+        cache.set(f"mc_uuid_{unverifiedMcUsername}", player_uuid, timeout=900)
+
         # with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
         async with rconClient(settings.MC_IP, settings.MC_RCON_PORT, settings.MC_RCON_PW) as client:
             await client.connect()
