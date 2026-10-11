@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ['pisscraft.com']
+ALLOWED_HOSTS = ['pisscraft.com', 'localhost']
 
 CSRF_TRUSTED_ORIGINS = [
     "https://pisscraft.com",

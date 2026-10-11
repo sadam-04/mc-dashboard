@@ -46,17 +46,17 @@ class MySignupForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get("username")
+        my_username = cleaned_data.get("username")
         pin = cleaned_data.get("pin")
         
-        if username and pin:
-            cache_key = f"mc_registration_{username}"
+        if my_username and pin:
+            cache_key = f"mc_registration_{my_username}"
             stored_pin = cache.get(cache_key)
 
             if not stored_pin:
-                self.add_error('pin', "wrong pin cuh")
+                self.add_error('pin', "wrong pin cuh 1")
             elif stored_pin != pin:
-                self.add_error('pin', "wrong pin cuh")
+                self.add_error('pin', "wrong pin cuh 2")
 
         return cleaned_data
 
