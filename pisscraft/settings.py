@@ -30,8 +30,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ['pisscraft.com', '10.6.7.32', 'localhost']
+ALLOWED_HOSTS = ['pisscraft.com', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://pisscraft.com",
+]
 
 # Application definition
 
@@ -76,6 +79,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pisscraft.wsgi.application'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "my_cache_table",
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases

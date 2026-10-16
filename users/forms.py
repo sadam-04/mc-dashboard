@@ -37,6 +37,8 @@ class MySignupForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         self.fields['username'].widget.attrs.update({'class': 'text-input'})
+        self.fields['username'].widget.attrs.update({'placeholder': 'MC Username'})
+                        
         self.fields['password1'].widget.attrs.update({'class': 'text-input'})
         self.fields['password2'].widget.attrs.update({'class': 'text-input'})
 
@@ -46,17 +48,18 @@ class MySignupForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get("username")
+        my_username = cleaned_data.get("username")
         pin = cleaned_data.get("pin")
         
-        if username and pin:
-            cache_key = f"mc_registration_{username}"
+        if my_username and pin:
+            cache_key = f"mc_registration_{my_username}"
             stored_pin = cache.get(cache_key)
 
             if not stored_pin:
-                self.add_error('pin', "wrong pin cuh")
+                self.add_error('pin', "wrong pin cuh (no cached pin found)")
             elif stored_pin != pin:
-                self.add_error('pin', "wrong pin cuh")
+                self.add_error('pin', "wrong pin cuh 2")
+                logger.info(f"User entered wrong pin. Entered {pin}, expected {stored_pin}")
 
         return cleaned_data
 

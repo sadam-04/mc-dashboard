@@ -94,12 +94,14 @@ async def create_pin_view(request):
                 "error": "player not found, are you logged into the server?",
             })
 
-        pin = str(random.randint(1000, 9999))
         cache_key = f"mc_registration_{unverifiedMcUsername}"
-        cache.set(cache_key, pin, timeout=900)
+        await cache.adelete(f"mc_registration_{unverifiedMcUsername}")
+
+        pin = str(random.randint(1000, 9999))
+        await cache.aset(cache_key, pin, timeout=900)
 
         # save the player's uuid to cache so it can be grabbed later if/when the pissuser object is being created
-        cache.set(f"mc_uuid_{unverifiedMcUsername}", player_uuid, timeout=900)
+        await cache.aset(f"mc_uuid_{unverifiedMcUsername}", player_uuid, timeout=900)
 
         # with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
         async with rconClient(settings.MC_IP, settings.MC_RCON_PORT, settings.MC_RCON_PW) as client:
@@ -108,7 +110,7 @@ async def create_pin_view(request):
             await client.send_cmd(send_pin_command)
             await client.close()
 
-        print(f"new pin ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
+        logger.info(f"new PIN ({pin}) generated for user {unverifiedMcUsername} with timeout {900}")
 
         return JsonResponse({
             "status": "success",
