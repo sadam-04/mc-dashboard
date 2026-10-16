@@ -18,7 +18,7 @@
         <div id="player-list" class="flex-col">
             
         </div>
-        <button id="hello_bttn" onclick="say_hello()" class="navBttn" style="display: none;">Wave</button>
+        <button id="hello_bttn" onclick="say_hello()" class="navBttn flex-row" style="display: none; width: fit-content;">Wave to&nbsp;<div id="player-count-value"></div>&nbsp;players</button>
     </div>
 
     {% csrf_token %}
@@ -37,6 +37,7 @@
         const motdText = document.getElementById("motd");
         const refreshMsg = document.getElementById("refresh-state");
         const refreshBttn = document.getElementById("refresh-bttn");
+        const playerCountValue = document.getElementById("player-count-value");
 
         function update_stats() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -56,22 +57,24 @@
                     refreshBttn.style.display = "block";
                 }, 200);
 
+                
                 if (resp.status == "failure") {
                     statusText.innerHTML = "Offline";
                     statusText.style.color = "red";
                     noPlayersMsg.innerHTML = "Server offline";
                     return;
                 }
-
+                
                 statusText.innerHTML = "Online";
                 statusText.style.color = "limegreen";
-
+                
                 let players = JSON.parse(resp.players);
                 let motd = resp.motd;
-
+                
                 console.log("Players: " + players);
-
+                
                 playerCount = players.length;
+                playerCountValue.innerHTML = playerCount;
 
                 playerList.replaceChildren()
                 if (playerCount == 0) {
@@ -102,7 +105,7 @@
                         playerList.appendChild(pDiv);
                     }
 
-                    helloBttn.style.display = "block";
+                    helloBttn.style.display = "flex";
                 }
                 motdText.innerHTML = motd;
             });
