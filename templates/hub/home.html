@@ -15,8 +15,8 @@
     
     <div class="player-list-area">
         <div id="no-players-msg" style="display: none;">There are currently no players online.</div>
-        <div id="player-list" class="flex-col">
-            
+        <div id="player-list" class="flex-col" style="gap: 5px;">
+
         </div>
         <button id="hello_bttn" onclick="say_hello()" class="navBttn flex-row" style="display: none; width: fit-content;">Wave to&nbsp;<div id="player-count-value"></div>&nbsp;players</button>
     </div>
@@ -99,7 +99,6 @@
                         pImg.src = "https://mc-api.io/render/FACE/" + p[1] + "?size=256";
                         pImg.style.width = "30px";
                         
-
                         pDiv.appendChild(pImg);
                         pDiv.appendChild(pName);
                         playerList.appendChild(pDiv);
