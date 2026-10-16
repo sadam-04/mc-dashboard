@@ -16,6 +16,7 @@ import asyncio
 
 # from users.models import PlayerProfile
 from users.models import PissUser
+from hub.process import get_stat
 
 import logging
 
@@ -25,7 +26,8 @@ logger = logging.getLogger(__name__)
 @login_required
 def home(request):
     logger.info("Processing home page request")
-    return render(request, 'hub/home.html')
+    leaderboard = get_stat(["minecraft:custom", "minecraft:deaths"])
+    return render(request, 'hub/home.html', {"leaderboard": leaderboard.items()})
 
 @login_required
 @ensure_csrf_cookie
@@ -114,7 +116,7 @@ def teleport(request):
             return JsonResponse({"status": "success", "mc_response": response})
     except Exception as e:
         logger.error("Error while processing teleport request: " + str(e))
-        return JsonResponse({"status": "failure", "error": "It didn't work sorry"},  status=500)
+        return JsonResponse({"status": "failure", "error": "It didn't work :( sowwy"},  status=500)
 
 @login_required
 @require_POST

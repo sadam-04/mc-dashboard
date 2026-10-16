@@ -299,6 +299,31 @@ iframe {
     gap: 20px;
 }
 
+.leaderboard {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.leaderboard:nth-child(1) {
+    /* font-weight: 900; */
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: gold;
+}
+
+.leaderboard:nth-child(2) {
+    /* font-weight: 600; */
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: silver;
+}
+
+.leaderboard:nth-child(3) {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: brown;
+}
+
 @media screen and (max-width: 800px) {
   body {
     gap: 8px;

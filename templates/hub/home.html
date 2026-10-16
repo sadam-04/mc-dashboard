@@ -18,7 +18,17 @@
         <div id="player-list" class="flex-col" style="gap: 5px;">
 
         </div>
-        <button id="hello_bttn" onclick="say_hello()" class="navBttn flex-row" style="display: none; width: fit-content;">Wave to&nbsp;<div id="player-count-value"></div>&nbsp;players</button>
+        <button id="hello_bttn" onclick="say_hello()" class="navBttn flex-row" style="display: none; width: fit-content;">Wave to&nbsp;<div id="player-count-value"></div>&nbsp;player(s)</button>
+    </div>
+
+    <div id="leaderboard" style="width: 100%; margin-top: 20px;">
+        <div class="text2">Death counter</div>
+        <hr style="background-color: #888;">
+        <ol type="1" class="flex-col" style="gap: 15px;">
+        {% for player, score in leaderboard %}
+            <li class="leaderboard"><div class="flex-row" style="justify-content: space-between;"><div>{{ player }}</div><div>{{ score }}</div></div></li>
+        {% endfor %}
+        </ol>
     </div>
 
     {% csrf_token %}

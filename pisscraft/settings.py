@@ -224,3 +224,5 @@ MC_SMP_TOKEN = os.environ.get('MC_SERVER_SMP_PW')
 
 MC_RCON_PORT = int(os.environ.get('MC_SERVER_RCON_PORT'))
 MC_RCON_PW = os.environ.get('MC_SERVER_RCON_PW')
+
+MC_ROOT_DIR = Path(os.environ.get('MC_SERVER_ROOT'))
