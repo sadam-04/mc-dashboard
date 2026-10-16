@@ -25,21 +25,23 @@
         <div class="flex-row" style="justify-content: space-between; align-items: center; gap: 10px;">
             <div class="flex-row">
                 <div class="text2">Leaderboard:&nbsp;</div>
-                <select id="leaderboard-category" class="text2">
+                <select id="leaderboard-category" class="text2" >
                     <option value="deaths">Deaths</option>
                     <option value="playtime">Playtime</option>
-                    <option value="jumps">Jumps</option>
+                    <option value="damage_taken">Damage Taken</option>
+                    <option value="damage_dealt">Damage Dealt</option>
+                    <option value="mobs_killed">Mobs Killed</option>
+                    <option value="distance_walked">Centimeters Walked</option>
+                    <option value="distance_fallen">Centimeters Fallen</option>
+                    <option value="animals_bred">Animals Bred</option>
+                    <option value="slept">Times Slept</option>
                 </select>
             </div>
             <div class="mobile-hide" style="color: #888;">Updates every ~5 mins</div>
         </div>
         <hr style="background-color: #888;">
         <div id="leaderboard-error" style="display: none;"></div>
-        <ol id="leaderboard-scores" type="1" class="flex-col" style="gap: 15px;">
-        {% comment %} {% for player, score in leaderboard %}
-            <li class="leaderboard"><div class="flex-row" style="justify-content: space-between;"><div>{{ player }}</div><div>{{ score }}</div></div></li>
-        {% endfor %} {% endcomment %}
-        </ol>
+        <ol id="leaderboard-scores" type="1" class="flex-col" style="gap: 15px;"></ol>
     </div>
 
     {% csrf_token %}
@@ -112,6 +114,7 @@
                         // pDiv.classList.add("player-list-entry");
                         // pDiv.style.alignItems = "center";
                         // pDiv.style.gap = "10px";
+
                         sName.textContent = score[0];
                         sScore.textContent = score[1];
                         // pImg.src = "https://mc-api.io/render/FACE/" + p[1] + "?size=256";

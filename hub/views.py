@@ -151,13 +151,36 @@ def get_leaderboard(request):
         categoryIds = {
             "deaths": ["minecraft:custom", "minecraft:deaths"],
             "playtime": ["minecraft:custom", "minecraft:play_time"],
-            "jumps": ["minecraft:custom", "minecraft:jump"],
+            "damage_taken": ["minecraft:custom", "minecraft:damage_taken"],
+            "damage_dealt": ["minecraft:custom", "minecraft:damage_dealt"],
+            "mobs_killed": ["minecraft:custom", "minecraft:mob_kills"],
+            "distance_walked": ["minecraft:custom", "minecraft:walk_one_cm"],
+            "distance_fallen": ["minecraft:custom", "minecraft:fall_one_cm"],
+            "animals_bred": ["minecraft:custom", "minecraft:animals_bred"],
+            "slept": ["minecraft:custom", "minecraft:sleep_in_bed"],            
+            # "killed_by_skeleton": ["minecraft:killed_by", "minecraft:skeleton"],
+            # "shield_damage": ["minecraft:custom", "minecraft:damage_blocked_by_shield"],
+            # "distance_flown": ["minecraft:custom", "minecraft:aviate_one_cm"],
+            # "jumps": ["minecraft:custom", "minecraft:jump"],
+            # "distance_sprinted": ["minecraft:custom", "minecraft:sprint_one_cm"],
+            # "items_enchanted": ["minecraft:custom", "minecraft:enchant_item"],
+            # "": ["minecraft:custom", "minecraft:"],
+            # "": ["minecraft:custom", "minecraft:"],
+            # "": ["minecraft:custom", "minecraft:"],
+            # "": ["minecraft:custom", "minecraft:"],
         }
 
         data = json.loads(request.body)
         categoryId = data.get("category")
+        logger.info(f"Processing request for the {categoryId} leaderboard")
 
+        if categoryId not in categoryIds:
+            return JsonResponse({
+                "status": "failure",
+                "error": "Unknown leaderboard category requested",
+            })
         leaderboard = get_stat(categoryIds[categoryId])
+        print(str(leaderboard))
         return JsonResponse({
             "status": "success",
             "scores": json.dumps(leaderboard)
