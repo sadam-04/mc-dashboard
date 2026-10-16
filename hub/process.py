@@ -25,7 +25,7 @@ def get_stat(datapoint_addr):
                     seeker = seeker[key]
                 leaderboard[friendly] = seeker
         except Exception as e:
-            logger.warning(f"Unable to get death count for player {friendly} ({fn}). Assuming 0: {str(e)}")
+            logger.warning(f"Unable to get stat value {datapoint_addr[-1]} for player {friendly} ({fn}). Assuming 0: {str(e)}")
             leaderboard[friendly] = 0
 
     lb_sorted = sorted(leaderboard.items(), key=lambda item: -item[1])

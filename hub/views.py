@@ -144,6 +144,11 @@ async def status_view(request):
         "motd": chopped_motd
     })
 
+# def sec_to_pretty(seconds):
+#     hours, remainder = divmod(seconds, 3600)
+#     minutes, seconds = divmod(remainder, 60)
+#     return f"{hours}, minutes, seconds)
+
 @login_required
 @require_POST
 def get_leaderboard(request):
@@ -184,7 +189,12 @@ def get_leaderboard(request):
                 "error": "Unknown leaderboard category requested",
             })
         leaderboard = get_stat(categoryIds[categoryId])
-        print(str(leaderboard))
+
+        if categoryId in ("playtime", "time_since_death"):
+            leaderboard = [(name, f"{round(score/72000, 1)} hours") for (name, score) in leaderboard] 
+        elif categoryId in ("minecart_distance", "distance_fallen"):
+            leaderboard = [(name, f"{round(score/100, 2)} meters") for (name, score) in leaderboard]
+
         return JsonResponse({
             "status": "success",
             "scores": json.dumps(leaderboard)

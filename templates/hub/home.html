@@ -78,6 +78,7 @@
 
         function update_leaderboard(category) {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            leaderboardScores.replaceChildren();
             let res = fetch('/leaderboard/', {
                 method: 'POST',
                 headers: {
@@ -96,7 +97,6 @@
                 }
 
                 let scores = JSON.parse(resp.scores);
-                leaderboardScores.replaceChildren();
 
                 if (scores.length == 0) {
                     // noPlayersMsg.innerHTML = "There are currently no players online";
