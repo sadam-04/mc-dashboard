@@ -149,15 +149,19 @@ async def status_view(request):
 def get_leaderboard(request):
     try:
         categoryIds = {
-            "deaths": ["minecraft:custom", "minecraft:deaths"],
             "playtime": ["minecraft:custom", "minecraft:play_time"],
-            "damage_taken": ["minecraft:custom", "minecraft:damage_taken"],
-            "damage_dealt": ["minecraft:custom", "minecraft:damage_dealt"],
+            "deaths": ["minecraft:custom", "minecraft:deaths"],
+            "time_since_death": ["minecraft:custom", "minecraft:time_since_death"],
             "mobs_killed": ["minecraft:custom", "minecraft:mob_kills"],
-            "distance_walked": ["minecraft:custom", "minecraft:walk_one_cm"],
-            "distance_fallen": ["minecraft:custom", "minecraft:fall_one_cm"],
-            "animals_bred": ["minecraft:custom", "minecraft:animals_bred"],
             "slept": ["minecraft:custom", "minecraft:sleep_in_bed"],            
+            "animals_bred": ["minecraft:custom", "minecraft:animals_bred"],
+            "fish_caught": ["minecraft:custom", "minecraft:fish_caught"],
+            "damage_taken": ["minecraft:custom", "minecraft:damage_taken"],
+            "minecart_distance": ["minecraft:custom", "minecraft:minecart_one_cm"],
+            "distance_fallen": ["minecraft:custom", "minecraft:fall_one_cm"],
+            "records_played": ["minecraft:custom", "minecraft:play_record"],
+            
+            # "distance_walked": ["minecraft:custom", "minecraft:walk_one_cm"],
             # "killed_by_skeleton": ["minecraft:killed_by", "minecraft:skeleton"],
             # "shield_damage": ["minecraft:custom", "minecraft:damage_blocked_by_shield"],
             # "distance_flown": ["minecraft:custom", "minecraft:aviate_one_cm"],

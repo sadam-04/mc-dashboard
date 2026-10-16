@@ -26,15 +26,17 @@
             <div class="flex-row">
                 <div class="text2">Leaderboard:&nbsp;</div>
                 <select id="leaderboard-category" class="text2" >
-                    <option value="deaths">Deaths</option>
                     <option value="playtime">Playtime</option>
-                    <option value="damage_taken">Damage Taken</option>
-                    <option value="damage_dealt">Damage Dealt</option>
+                    <option value="deaths">Deaths</option>
+                    <option value="time_since_death">Time Since Death</option>
                     <option value="mobs_killed">Mobs Killed</option>
-                    <option value="distance_walked">Cm Walked</option>
-                    <option value="distance_fallen">Cm Fallen</option>
-                    <option value="animals_bred">Animals Bred</option>
                     <option value="slept">Times Slept</option>
+                    <option value="animals_bred">Animals Bred</option>
+                    <option value="fish_caught">Fish Caught</option>
+                    <option value="damage_taken">Damage Taken</option>
+                    <option value="minecart_distance">Minecart Distance</option>
+                    <option value="distance_fallen">Distance Fallen</option>
+                    <option value="records_played">Records Played</option>
                 </select>
             </div>
             <div class="mobile-hide" style="color: #888;">Updates every ~5 mins</div>
@@ -49,15 +51,9 @@
     <script>
         let playerCount = 0;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            update_stats();
-            update_leaderboard("deaths");
-        });
-
-        document.getElementById("leaderboard-category").addEventListener('change', (event) => {
-            update_leaderboard(event.target.value);
-        });
-
+        
+        
+        
         const statusText = document.getElementById("status");
         const noPlayersMsg = document.getElementById("no-players-msg");
         const playerList = document.getElementById("player-list");
@@ -68,6 +64,17 @@
         const playerCountValue = document.getElementById("player-count-value");
         const leaderboardScores = document.getElementById("leaderboard-scores");
         const leaderboardError = document.getElementById("leaderboard-error");
+        const leaderboardSelector = document.getElementById("leaderboard-category");
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            update_stats();
+            update_leaderboard("deaths");
+            leaderboardSelector.selectedIndex = Math.floor(Math.random() * leaderboardSelector.options.length);
+        });
+
+        leaderboardSelector.addEventListener('change', (event) => {
+            update_leaderboard(event.target.value);
+        });
 
         function update_leaderboard(category) {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
