@@ -68,7 +68,6 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             update_stats();
-            update_leaderboard("deaths");
             leaderboardSelector.selectedIndex = Math.floor(Math.random() * leaderboardSelector.options.length);
             update_leaderboard(leaderboardSelector.value);
         });
