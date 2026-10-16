@@ -130,7 +130,7 @@ async def status_view(request):
         logger.error("Failed to get server status. Check that the server is online and your password is correct: " + str(e))
         return JsonResponse({
             "status": "failure",
-            "error": "server errer",
+            "error": "server error",
         })
 
     namesList = list(map(lambda p: (p.name, p.id), players))
