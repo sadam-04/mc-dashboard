@@ -4,7 +4,10 @@
 {% block content %}
     <div class="sub-header">
         <div class="text2 flex-row">Status:&nbsp;<div id="status"></div></div>
-        <button onclick="update_stats()" class="navBttn">refresh</button>
+        <div class="flex-row" style="justify-content: flex-start; align-items: center;">
+            <div id="refresh-state" style="color: #888;"></div>
+            <button onclick="update_stats()" class="navBttn" id="refresh-bttn">refresh</button>
+        </div>
     </div>
     
     <div id="motd"></div>
@@ -32,9 +35,13 @@
         const playerList = document.getElementById("player-list");
         const helloBttn = document.getElementById("hello_bttn");
         const motdText = document.getElementById("motd");
+        const refreshMsg = document.getElementById("refresh-state");
+        const refreshBttn = document.getElementById("refresh-bttn");
 
         function update_stats() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            refreshMsg.innerHTML = "refreshing...";
+            refreshBttn.style.display = "none";
             let res = fetch('/status/', {
                 method: 'POST',
                 headers: {
@@ -44,6 +51,11 @@
             })
             .then(raw => raw.json())
             .then(resp => {
+                setTimeout(() => {
+                    refreshMsg.innerHTML = "";
+                    refreshBttn.style.display = "block";
+                }, 200);
+
                 if (resp.status == "failure") {
                     statusText.innerHTML = "Offline";
                     statusText.style.color = "red";

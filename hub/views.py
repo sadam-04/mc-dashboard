@@ -122,15 +122,12 @@ async def status_view(request):
     # print("yoooooo")
     client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
     try:
-        # print("##### START")
         await client.connect()
         players = await client.players.get()
         motd = await client.server_settings.motd()
         await client.close()
-        # print("###### END")
     except RuntimeError as e:
-        # print("CREEEEEEEEEEEEEEEEEEEEEEEE")
-        logger.error("Error in status_view: " + str(e))
+        logger.error("Failed to get server status. Check that the server is online and your password is correct: " + str(e))
         return JsonResponse({
             "status": "failure",
             "error": "server errer",
