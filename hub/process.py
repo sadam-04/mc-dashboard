@@ -28,10 +28,10 @@ def get_stat(datapoint_addr):
             logger.warning(f"Unable to get death count for player {friendly} ({fn}). Assuming 0: {str(e)}")
             leaderboard[friendly] = 0
 
-    lb_sorted = dict(sorted(leaderboard.items(), key=lambda item: -item[1]))
+    lb_sorted = sorted(leaderboard.items(), key=lambda item: -item[1])
     return lb_sorted
 
 if __name__ == "__main__":
     lb = get_stat(["minecraft:custom", "minecraft:play_time"])
-    for name, score in lb.items():
+    for name, score in lb:
         print(f"{name:<20}: {score}")

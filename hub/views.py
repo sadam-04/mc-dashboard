@@ -26,8 +26,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def home(request):
     logger.info("Processing home page request")
-    leaderboard = get_stat(["minecraft:custom", "minecraft:deaths"])
-    return render(request, 'hub/home.html', {"leaderboard": leaderboard.items()})
+    return render(request, 'hub/home.html')
 
 @login_required
 @ensure_csrf_cookie
@@ -144,4 +143,27 @@ async def status_view(request):
         "players": json.dumps(namesList),
         "motd": chopped_motd
     })
-    
+
+@login_required
+@require_POST
+def get_leaderboard(request):
+    try:
+        categoryIds = {
+            "deaths": ["minecraft:custom", "minecraft:deaths"],
+            "playtime": ["minecraft:custom", "minecraft:play_time"],
+            "jumps": ["minecraft:custom", "minecraft:jump"],
+        }
+
+        data = json.loads(request.body)
+        categoryId = data.get("category")
+
+        leaderboard = get_stat(categoryIds[categoryId])
+        return JsonResponse({
+            "status": "success",
+            "scores": json.dumps(leaderboard)
+        })
+    except Exception as e:
+        return JsonResponse({
+            "status": "failure",
+            "error": str(e)
+        })
