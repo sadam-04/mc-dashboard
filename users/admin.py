@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PissUser
+from .models import McUser
 
 # Register your models here.
-admin.site.register(PissUser)
+admin.site.register(McUser)

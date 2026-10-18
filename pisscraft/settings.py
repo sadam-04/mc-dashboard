@@ -212,7 +212,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_URL = 'login_view'
 
-AUTH_USER_MODEL = 'users.PissUser'
+AUTH_USER_MODEL = 'users.McUser'
 
 # MC_USER_ASSOCS = {
 #     'adam': 'sadam_official',

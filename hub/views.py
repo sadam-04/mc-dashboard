@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 import asyncio
 
 # from users.models import PlayerProfile
-from users.models import PissUser
+from users.models import McUser
 from hub.process import get_stat
 
 import logging

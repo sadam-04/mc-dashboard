@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
 from django import forms
 from django.core.cache import cache
-from .models import PissUser
+from .models import McUser
 
 import logging
 
@@ -43,7 +43,7 @@ class MySignupForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({'class': 'text-input'})
 
     class Meta(UserCreationForm.Meta):
-        model = PissUser
+        model = McUser
         fields = ("username",)
 
     def clean(self):
