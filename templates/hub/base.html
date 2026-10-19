@@ -1,7 +1,7 @@
 {% load static %}
 <html>
     <head>
-        <title>Pisscraft</title>
+        <title>{{ SITE_HEADER_TITLE }}</title>
     
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{% static 'css/global.css' %}">
@@ -9,7 +9,7 @@
     <body>
         <div class="header">
             <div class="flex-row">
-                <div class="funny-title-text">Pisscraft.com</div>
+                <div class="funny-title-text">{{ SITE_HEADER_TITLE }}</div>
                 <img src={% static 'img/susron.gif'%} style="width: 30px; height: 30px;">
                 <img src={% static 'img/susron.gif'%} style="width: 30px; height: 30px;">
                 <img src={% static 'img/susron.gif'%} style="width: 30px; height: 30px;">
@@ -20,7 +20,7 @@
                 <a href="/places" class="navBttn">Places</a>
                 <div style="display: flex; flex-direction: row;">
                     <a href="/map" class="navBttn" style="border-radius: 7px 0 0 7px">Dynmap</a>
-                    <a href="https://map.pisscraft.com" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
+                    <a href="{{ DYNMAP_WEB_ADDR }}" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
             <a href="/places" class="navBttn">Places</a>
             <div style="display: flex; flex-direction: row;">
                 <a href="/map" class="navBttn" style="border-radius: 7px 0 0 7px">Dynmap</a>
-                <a href="https://map.pisscraft.com" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
+                <a href="{{ DYNMAP_WEB_ADDR }}" target="_blank" class="navBttn" style="border-radius: 0 7px 7px 0">&#8599;</a>
             </div>
         </div>
         <div class="content">

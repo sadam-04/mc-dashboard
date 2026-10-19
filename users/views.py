@@ -18,8 +18,7 @@ from aiomcrcon import Client as rconClient
 from django.conf import settings
 
 from users.forms import MySignupForm
-# from users.models import PlayerProfile
-from users.models import PissUser
+from django.contrib.auth import get_user_model
 
 import logging
 
@@ -65,7 +64,7 @@ async def create_pin_view(request):
         unverifiedMcUsername = reqBody.get('username')
 
         # check if a player profile already exists for this mc account
-        profileConflict = await PissUser.objects.filter(username=unverifiedMcUsername).aexists()
+        profileConflict = await get_user_model().objects.filter(username=unverifiedMcUsername).aexists()
         if profileConflict:
             return JsonResponse({
                 "status": "failure",
@@ -100,7 +99,7 @@ async def create_pin_view(request):
         pin = str(random.randint(1000, 9999))
         await cache.aset(cache_key, pin, timeout=900)
 
-        # save the player's uuid to cache so it can be grabbed later if/when the pissuser object is being created
+        # save the player's uuid to cache so it can be grabbed later if/when the user object is being created
         await cache.aset(f"mc_uuid_{unverifiedMcUsername}", player_uuid, timeout=900)
 
         # with MCRcon(settings.MC_IP, settings.MC_RCON_PW, port=settings.MC_RCON_PORT) as svr:
