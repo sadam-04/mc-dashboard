@@ -4,3 +4,4 @@ __pycache__/
 /staticfiles
 .env
 /player_stats
+db_backup.json
