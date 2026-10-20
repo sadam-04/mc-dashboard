@@ -1,7 +1,7 @@
 import json
 import logging
 
-from pisscraft.settings import BASE_DIR, MC_ROOT_DIR
+from mcdashboard.settings import BASE_DIR, MC_ROOT_DIR
 
 logger = logging.getLogger(__name__)
 

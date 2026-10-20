@@ -5,17 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render
-from pisscraft import settings
+from mcdashboard import settings
 
 from mcrcon import MCRcon
 from mcsmp.client import Client
 
-from django.contrib.auth.models import User
-
 import asyncio
 
-# from users.models import PlayerProfile
-from users.models import PissUser
 from hub.process import get_stat
 
 import logging

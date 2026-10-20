@@ -1,5 +1,5 @@
 """
-ASGI config for pisscraft project.
+ASGI config for mcdashboard project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pisscraft.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mcdashboard.settings')
 
 application = get_asgi_application()
