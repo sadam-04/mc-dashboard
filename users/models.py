@@ -11,7 +11,7 @@ from django.contrib.auth.models import User, AbstractUser
 #     def __str__(self):
 #         return f"{self.user.username} (MC: {self.mc_username}/{self.mc_uuid})"
 
-class PissUser(AbstractUser):
+class McUser(AbstractUser):
     minecraft_uuid = models.CharField(max_length=36, blank=True, null=True)
 
     def __str__(self):
