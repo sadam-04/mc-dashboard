@@ -12,6 +12,7 @@ from mcrcon import MCRcon
 from mcsmp.client import Client
 
 import asyncio
+from asgiref.sync import sync_to_async
 
 from hub.process import get_stat
 
@@ -19,6 +20,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# def read_file_sync(file_path):
+#     with open(file_path, 'r', encoding='utf-8') as f:
+#         return f.read()
 
 @login_required
 def home(request):
@@ -30,9 +34,10 @@ def home(request):
 def places(request):
     logger.info("Processing places page request")
 
-    locationDataPath = os.path.join(settings.BASE_DIR, 'static', 'data', 'locations.json')
-    with open(locationDataPath, 'r', encoding='utf-8') as locationFile:
-        locations = json.load(locationFile)
+    locationDataPath = os.path.join(settings.BASE_DIR, 'locations.json')
+    # locationFile = await read_file_sync(locationDataPath)
+    locationFile = open(locationDataPath, 'r', encoding='utf-8')
+    locations = json.load(locationFile)
 
     return render(request, 'hub/places.html', {"locations": locations})
 
@@ -67,43 +72,44 @@ def say_hello_view(request):
 def teleport(request):
     logger.info("Processing teleport request")
     try:
-        # tpLocs = {
-        #     "fall-ow": "33921.5 71 5784.5",
-        #     "gtc-ow": "36755.5 70 3630.5",
-        #     "gtc-ne": "4583.5 75 443.5",
-        #     "tt-ow": "-350.5 65 -1942.5",
-        #     "tt-ne": "-35.5 80 -246.5",
-        #     "rb-ow": "-3121 176 -1889.5",
-        #     "rb-ne": "-388 101 -242.5",
-        #     "cnb-ow": "-2814.5 74 -6867.5",
-        #     "cnb-ne": "-359 34 -848",
-        #     "porc-ow": "-3866.5 72 1763.5",
-        #     "porc-ne": "-488 61 217.5",
-        #     "s2-ow": "-8588.5 64 -4154.5",
-        #     "s2-ne": "-1086.5 58 -527",
-        #     "2c-ow": "4172.5 63 1355.5",
-        #     "2c-ne": "513 80 180.5",
-        #     "bn-ow": "10332.5 69 -2107.5",
-        # }
+        svrStatus = asyncio.run(get_server_status())
+        thisUser = asyncio.run(request.auser())
+        playerList = list(map(lambda p: p.name, svrStatus["players"]))
+        if thisUser.username not in playerList:
+            # print(f"svrStatus[\"players\"]={["players"]}")
+            logger.info(f"User {thisUser.username} attempted to teleport while not logged into MC server.")
+            return JsonResponse({"status": "failure", "error": "Not logged into MC server"}, status=403)
 
-
-        locationDataPath = os.path.join(settings.BASE_DIR, 'static', 'data', 'locations.json')
+        locationDataPath = os.path.join(settings.BASE_DIR, 'locations.json')
         with open(locationDataPath, 'r', encoding='utf-8') as locationFile:
             locations = json.load(locationFile)
 
         data = json.loads(request.body)
 
-        tpId = data.get("tpdest")
-        tpDim = ""
-        if tpId[-2:] == "ne":
-            tpDim = "the_nether"
-        else:
-            tpDim = "overworld"
+        locationId = data.get("tpid")
+        locationDim = data.get("tpdim")
 
-        tpLoc = locations.get(tpId)
-        if not tpLoc:
-            logger.error("Unknown tp-id was posted to the teleport view: " + tpId)
-            return JsonResponse({"status": "failure", "error": "YO"})
+        if None in (locationId, locationDim):
+            logger.error("Bad tpdim was posted to the teleport view: " + locationDim)
+            return JsonResponse({"status": "failure", "error": "Internal server error"})
+
+        # tpDim = ""
+        if locationDim not in ("overworld", "the_nether", "the_end"):
+            logger.error("Bad tpdim was posted to the teleport view: " + locationDim)
+            return JsonResponse({"status": "failure", "error": "YOOO"})
+
+        logger.info(str(locations))
+
+        try:
+            logger.info(f"Trying to get {locationId} in {locationDim}")
+            tpCoords = locations.get(locationId).get(locationDim)
+        except Exception as e:
+            logger.error("2: Error while processing teleport request: " + str(e))
+            return JsonResponse({"status": "failure", "error": "Internal server error"},  status=500)
+
+        if not tpCoords:
+            logger.error(f"Unable to get coords for the given parameters: (id={locationId}, dim={locationDim})")
+            return JsonResponse({"status": "failure", "error": "YOO"})
 
         # django_user = request.user.username
         # mc_username = settings.MC_USER_ASSOCS.get(django_user)
@@ -113,31 +119,34 @@ def teleport(request):
         #     logger.error(f"No PlayerProfile object found for this user ({str(request.user)})")
         #     return JsonResponse({"status": "failure", "error": "i couldn't find your minecraft account oopsy"}, status=403)
 
-        cmd = f"execute as {mc_username} in minecraft:{tpDim} run tp {mc_username} {tpLoc}"
+        cmd = f"execute as {mc_username} in minecraft:{locationDim} run tp {mc_username} {tpCoords}"
 
         with MCRcon(settings.MC_IP, settings.MC_RCON_PW, settings.MC_RCON_PORT) as svr:
             response = svr.command(cmd)
-            return JsonResponse({"status": "success", "mc_response": response})
+            return JsonResponse({"status": "success"})
     except Exception as e:
         logger.error("Error while processing teleport request: " + str(e))
         return JsonResponse({"status": "failure", "error": "It didn't work :( sowwy"},  status=500)
 
-@login_required
-@require_POST
-async def status_view(request):
-    # print("yoooooo")
+async def get_server_status():
     client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
     try:
         await client.connect()
         players = await client.players.get()
         motd = await client.server_settings.motd()
         await client.close()
+        return {"players": players, "motd": motd}
     except RuntimeError as e:
         logger.error("Failed to get server status. Check that the server is online and your password is correct: " + str(e))
-        return JsonResponse({
-            "status": "failure",
-            "error": "server error",
-        })
+        return None
+
+@login_required
+@require_POST
+async def status_view(request):
+    svrStatus = await get_server_status()
+    if svrStatus is not None:
+        players = svrStatus["players"]
+        motd = svrStatus["motd"]
 
     namesList = list(map(lambda p: (p.name, p.id), players))
     lastFormatterIdx = motd.rfind('§')

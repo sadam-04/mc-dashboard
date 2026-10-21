@@ -9,11 +9,23 @@
         <div id="place-action" class="navBttn">Copy Mode</div>
     </div>
 
+    {% for id, location in locations.items %}
+    <div class="coord-row-2">
+        <div class="place-title">{{ location.name }}</div>
+        <div class="coordinate-area">
+            {% if location.overworld %}<div class="ow-coords" data-tp-id="{{ id }}" data-tp-dim="overworld">Overworld&nbsp;<div class="copyable">{{ location.overworld }}</div></div>{% endif %}
+            {% if location.the_nether %}<div class="nether-coords" data-tp-id="{{ id }}" data-tp-dim="the_nether">Nether&nbsp;<div class="copyable">{{ location.the_nether }}</div></div>{% endif %}
+            {% if location.the_end %}<div class="end-coords" data-tp-id="{{ id }}" data-tp-dim="the_end">End&nbsp;<div class="copyable">{{ location.the_end }}</div></div>{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% comment %}
     <div class="coord-row-2">
         <div class="place-title">Fall Excursion</div>
         <div class="coordinate-area">
             <div class="ow-coords" data-location-id="fall-ow">Overworld&nbsp;<div class="copyable">33921.5 71 5784.5</div></div>
-            {% comment %} <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div> {% endcomment %}
+            <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div>
         </div>
     </div>
 
@@ -77,9 +89,10 @@
         <div class="place-title">Bazinganite</div>
         <div class="coordinate-area">
             <div class="ow-coords" data-location-id="bn-ow">Overworld&nbsp;<div class="copyable">10332.5 69 -2107.5</div></div>
-            {% comment %} <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div> {% endcomment %}
+            <div class="nether-coords" data-location-id="gt-ne">Nether&nbsp;<div class="copyable"></div></div>
         </div>
     </div>
+    {% endcomment %}
 
     {% comment %} <table>
         <tr>
@@ -178,15 +191,31 @@
                             'X-CSRFToken': csrfToken,
                         },
                         body: JSON.stringify({
-                            tpdest: bttn.dataset.locationId, //MUST VALIDATE+SANITIZE COORDS IN BACKEND
+                            tpid: bttn.dataset.tpId, //MUST VALIDATE+SANITIZE COORDS IN BACKEND
+                            tpdim: bttn.dataset.tpDim
                         })
                     })
                     .then(raw => raw.json())
                     .then(resp => {
                         if (resp.status == 'success') {
-                            //alert("yeah its feinberg yo");
-                        } else {
-                            alert("oopsie: " + resp.error);
+                            const originalText = bttn.innerHTML;
+                            bttn.innerHTML = 'Teleported!';
+                            setTimeout(() => {
+                                bttn.innerHTML = originalText;
+                            }, 1500);
+                        } else if (resp.status = 'forbidden') {
+                            const originalText = bttn.innerHTML;
+                            bttn.innerHTML = "Log into the MC server first";
+                            setTimeout(() => {
+                                bttn.innerHTML = originalText;
+                            }, 1500);
+                        }
+                        else {
+                            const originalText = bttn.innerHTML;
+                            bttn.innerHTML = 'An error occurred';
+                            setTimeout(() => {
+                                bttn.innerHTML = originalText;
+                            }, 1500);
                         }
                     });
                 }
