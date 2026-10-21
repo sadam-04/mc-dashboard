@@ -342,6 +342,13 @@ iframe {
     font-size: 1.6rem;
 }
 
+.disabled-bttn {
+    background-color: #404040;
+    color: #b0b0b0;
+    pointer-events: none;
+    opacity: 70%;
+}
+
 @media screen and (max-width: 800px) {
   body {
     gap: 8px;

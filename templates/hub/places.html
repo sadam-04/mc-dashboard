@@ -13,9 +13,9 @@
     <div class="coord-row-2">
         <div class="place-title">{{ location.name }}</div>
         <div class="coordinate-area">
-            {% if location.overworld %}<div class="ow-coords" data-tp-id="{{ id }}" data-tp-dim="overworld">Overworld&nbsp;<div class="copyable">{{ location.overworld }}</div></div>{% endif %}
-            {% if location.the_nether %}<div class="nether-coords" data-tp-id="{{ id }}" data-tp-dim="the_nether">Nether&nbsp;<div class="copyable">{{ location.the_nether }}</div></div>{% endif %}
-            {% if location.the_end %}<div class="end-coords" data-tp-id="{{ id }}" data-tp-dim="the_end">End&nbsp;<div class="copyable">{{ location.the_end }}</div></div>{% endif %}
+            {% if location.overworld %}<div class="ow-coords {% if not location.tp %}no-tp{% endif %}" data-tp-id="{{ id }}" data-tp-dim="overworld">Overworld&nbsp;<div class="copyable">{{ location.overworld }}</div></div>{% endif %}
+            {% if location.the_nether %}<div class="nether-coords {% if not location.tp %}no-tp{% endif %}" data-tp-id="{{ id }}" data-tp-dim="the_nether">Nether&nbsp;<div class="copyable">{{ location.the_nether }}</div></div>{% endif %}
+            {% if location.the_end %}<div class="end-coords {% if not location.tp %}no-tp{% endif %}" data-tp-id="{{ id }}" data-tp-dim="the_end">End&nbsp;<div class="copyable">{{ location.the_end }}</div></div>{% endif %}
         </div>
     </div>
     {% endfor %}
@@ -157,14 +157,24 @@
     <script>
         let mode = "copy";
 
+        const nonTeleportables = document.querySelectorAll(".no-tp");
+
         const actionBttn = document.getElementById("place-action");
         actionBttn.addEventListener('click', function(event) {
             if (mode == "copy") {
                 actionBttn.innerHTML = "TP Mode";
                 mode = "tp";
+                nonTeleportables.forEach(item => {
+                    // item.style.pointerEvents = "none";
+                    item.classList.toggle("disabled-bttn");
+                });
             } else {
                 actionBttn.innerHTML = "Copy Mode";
                 mode = "copy";
+                nonTeleportables.forEach(item => {
+                    item.classList.toggle("disabled-bttn");
+                    // item.style.pointerEvents = "none";
+                });
             }
         });
 
@@ -209,8 +219,7 @@
                             setTimeout(() => {
                                 bttn.innerHTML = originalText;
                             }, 1500);
-                        }
-                        else {
+                        } else {
                             const originalText = bttn.innerHTML;
                             bttn.innerHTML = 'An error occurred';
                             setTimeout(() => {

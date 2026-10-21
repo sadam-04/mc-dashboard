@@ -89,27 +89,29 @@ def teleport(request):
         locationId = data.get("tpid")
         locationDim = data.get("tpdim")
 
-        if None in (locationId, locationDim):
-            logger.error("Bad tpdim was posted to the teleport view: " + locationDim)
-            return JsonResponse({"status": "failure", "error": "Internal server error"})
 
-        # tpDim = ""
+        if None in (locationId, locationDim):
+            logger.error("Bad tpid and/or tpdim was posted to the teleport view: " + locationDim)
+            return JsonResponse({"status": "failure", "error": "Bad request"}, status=400)
+
+        if locations.get(locationId).get("tp") is not True:
+            logger.error("Requested location is not teleportable")
+            return JsonResponse({"status": "teleport-forbidden", "error": "Bad request"}, status=403)
+
         if locationDim not in ("overworld", "the_nether", "the_end"):
             logger.error("Bad tpdim was posted to the teleport view: " + locationDim)
-            return JsonResponse({"status": "failure", "error": "YOOO"})
-
-        logger.info(str(locations))
+            return JsonResponse({"status": "failure", "error": "Bad request"}, status=400)
 
         try:
             logger.info(f"Trying to get {locationId} in {locationDim}")
             tpCoords = locations.get(locationId).get(locationDim)
         except Exception as e:
-            logger.error("2: Error while processing teleport request: " + str(e))
-            return JsonResponse({"status": "failure", "error": "Internal server error"},  status=500)
+            logger.error(f"Unable to find coordinates for that id ({locationId}) and tpdim ({locationDim}): " + str(e))
+            return JsonResponse({"status": "failure", "error": "Bad request"},  status=400)
 
         if not tpCoords:
             logger.error(f"Unable to get coords for the given parameters: (id={locationId}, dim={locationDim})")
-            return JsonResponse({"status": "failure", "error": "YOO"})
+            return JsonResponse({"status": "failure", "error": "Bad request"}, status=400)
 
         # django_user = request.user.username
         # mc_username = settings.MC_USER_ASSOCS.get(django_user)
@@ -126,7 +128,7 @@ def teleport(request):
             return JsonResponse({"status": "success"})
     except Exception as e:
         logger.error("Error while processing teleport request: " + str(e))
-        return JsonResponse({"status": "failure", "error": "It didn't work :( sowwy"},  status=500)
+        return JsonResponse({"status": "failure", "error": "Internal server error"},  status=500)
 
 async def get_server_status():
     client = Client(settings.MC_IP, settings.MC_PORT, settings.MC_SMP_TOKEN)
