@@ -5,3 +5,4 @@ __pycache__/
 .env
 /player_stats
 db_backup.json
+locations.json
