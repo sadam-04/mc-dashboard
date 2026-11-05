@@ -1,5 +1,8 @@
+html {
+    scrollbar-gutter: stable;
+}
+
 body {
-    font-family: "Comic Sans MS";
     background-color: #202020;
     display: flex;
     flex-direction: column;
@@ -20,11 +23,14 @@ body {
 }
 
 .content {
-    width: 50%;
+    width: 50vw;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
     align-items: center;
+    /* max-height: calc(100vh - 51px);
+    overflow-y: auto;
+    overflow-x: visible; */
     /* margin: 0 auto; */
     /* border-left: 1px solid #808080;
     border-right: 1px solid #808080 ; */
@@ -123,7 +129,7 @@ form {
     font-family: "Chalkboard", "Chalkboard SE", -apple-system, "Comic Sans MS", BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     border-radius: 8px;
     border: 1px solid #888;
-    background-color: #303030;
+    background-color: inherit;
     padding: 4px 4px;
     color: white;
     width: 100%;
@@ -138,18 +144,66 @@ form {
     all: unset;
     cursor: pointer;
     display: flex;
-    border-radius: 7px;
-    border: 1px solid #888;
+    justify-content: center;
+    align-items: center;
+    position: static;
+    color: #eee;
+    border-radius: 8px;
+    /* border-radius: 30px; */
+    /* border: 1px solid #888; */
     padding: 4px 8px;
-    width: fit-content;
-    max-width: fit-content;
+    /* width: fit-content; */
+    /* max-width: fit-content; */
     height: 24px;
     /* margin: auto; */
     background-color: #404040;
+    /* line-height: 24px; */
 }
 
 .navBttn:hover {
-    background-color: #585858;
+    /* background-color: #484848; */
+}
+
+.navBttnLoader {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border: 3px solid #585858;
+    border-top: 3px solid #404040;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    animation: spin 0.5s linear infinite;
+    z-index: 100;
+}
+
+.bttnSize0 {
+    width: 1em;
+}
+
+.bttnSize1m {
+    width: 4em;
+}
+
+.bttnSize1 {
+    width: 4em;
+}
+
+.bttnSize2 {
+    width: 5em;
+}
+
+.bttnSize3 {
+    width: 6em;
+}
+
+.bttnSize4 {
+    width: 8em;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 th {
@@ -275,7 +329,7 @@ iframe {
 
 #motd {
     font-style: italic;
-    color: #888;
+    color: #666;
     width: 100%;
 }
 

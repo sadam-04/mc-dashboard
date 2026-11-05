@@ -146,9 +146,14 @@ async def get_server_status():
 @require_POST
 async def status_view(request):
     svrStatus = await get_server_status()
-    if svrStatus is not None:
-        players = svrStatus["players"]
-        motd = svrStatus["motd"]
+    if svrStatus is None:
+        return JsonResponse({
+            "status": "failure",
+            "error": "yo"
+        })
+
+    players = svrStatus["players"]
+    motd = svrStatus["motd"]
 
     namesList = list(map(lambda p: (p.name, p.id), players))
     lastFormatterIdx = motd.rfind('§')

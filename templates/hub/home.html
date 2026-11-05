@@ -5,8 +5,8 @@
     <div class="sub-header">
         <div class="text2 flex-row">Status:&nbsp;<div id="status"></div></div>
         <div class="flex-row" style="justify-content: flex-start; align-items: center;">
-            <div id="refresh-state" style="color: #888;"></div>
-            <button onclick="update_stats()" class="navBttn" id="refresh-bttn">refresh</button>
+            <div id="refresh-state" style="color: #666;"></div>
+            <button onclick="update_stats()" class="navBttn bttnSize2" id="refresh-bttn" style="position: relative;"><div id="refresh-spinner" class="navBttnLoader"></div><div id="refresh-label" style="margin: auto;">refresh</div></button>
         </div>
     </div>
     
@@ -14,7 +14,7 @@
     <br />
     
     <div class="player-list-area">
-        <div id="no-players-msg" style="display: none;">There are currently no players online.</div>
+        <div id="no-players-msg" style="display: none; color: #666;">There are currently no players online.</div>
         <div id="player-list" class="flex-col" style="gap: 5px;">
 
         </div>
@@ -39,7 +39,7 @@
                     <option value="records_played">Records Played</option>
                 </select>
             </div>
-            <div class="mobile-hide" style="color: #888;">Updates every ~5 mins</div>
+            <div class="mobile-hide" style="color: #666;">Updates every ~5 mins</div>
         </div>
         <hr style="background-color: #888;">
         <div id="leaderboard-error" style="display: none;"></div>
@@ -61,6 +61,8 @@
         const motdText = document.getElementById("motd");
         const refreshMsg = document.getElementById("refresh-state");
         const refreshBttn = document.getElementById("refresh-bttn");
+        const refreshSpinner = document.getElementById("refresh-spinner");
+        const refreshLabel = document.getElementById("refresh-label");
         const playerCountValue = document.getElementById("player-count-value");
         const leaderboardScores = document.getElementById("leaderboard-scores");
         const leaderboardError = document.getElementById("leaderboard-error");
@@ -139,8 +141,11 @@
 
         function update_stats() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            refreshMsg.innerHTML = "refreshing...";
-            refreshBttn.style.display = "none";
+            // refreshMsg.innerHTML = "refreshing...";
+            // refreshBttn.style.display = "none";
+            refreshSpinner.style.display = "block";
+            refreshLabel.style.display = "none";
+            refreshBttn.disabled = true;
             let res = fetch('/status/', {
                 method: 'POST',
                 headers: {
@@ -151,8 +156,11 @@
             .then(raw => raw.json())
             .then(resp => {
                 setTimeout(() => {
-                    refreshMsg.innerHTML = "";
-                    refreshBttn.style.display = "block";
+                    refreshSpinner.style.display = "none";
+                    refreshLabel.style.display = "block";
+                    refreshBttn.disabled = false;
+                    // refreshMsg.innerHTML = "";
+                    // refreshBttn.style.display = "block";
                 }, 200);
 
                 

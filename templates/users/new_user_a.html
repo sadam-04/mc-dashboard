@@ -23,8 +23,9 @@
                 <div>Enter your minecraft username</div>
                 <div class="flex-row" style="gap: 10px;">
                     {{ form.username }}
-                    <button onclick="verify_mc_user()" class="navBttn">Ok</button>
+                    <button onclick="verify_mc_user()" class="navBttn bttnSize1">Ok</button>
                 </div>
+                <div id="username-feedback" style="display: hidden; color: #bb3232"></div>
             </div>
 
             {% comment %} <div style="display: flex; flex-direction: row; gap: 8px;"> {% endcomment %}
@@ -78,6 +79,8 @@
             }
         })
 
+        const usernameFeedback = document.getElementById("username-feedback");
+
         // 
         function verify_mc_user() {
             const username = document.getElementById("id_username").value;
@@ -127,7 +130,10 @@
 
                     // alert("A PIN was sent to " + mcUsername);
                 } else {
-                    alert("uh oh: " + resp.error);
+                    // alert("uh oh: " + resp.error);
+                    
+                    usernameFeedback.textContent = resp.error;
+                    usernameFeedback.style.display = "flex";
                 }
             });
         }

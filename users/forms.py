@@ -56,9 +56,9 @@ class MySignupForm(UserCreationForm):
             stored_pin = cache.get(cache_key)
 
             if not stored_pin:
-                self.add_error('pin', "wrong pin cuh (no cached pin found)")
+                self.add_error('pin', "Invalid pin")
             elif stored_pin != pin:
-                self.add_error('pin', "wrong pin cuh 2")
+                self.add_error('pin', "Invalid pin")
                 logger.info(f"User entered wrong pin. Entered {pin}, expected {stored_pin}")
 
         return cleaned_data
