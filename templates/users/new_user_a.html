@@ -23,7 +23,7 @@
                 <div>Enter your minecraft username</div>
                 <div class="flex-row" style="gap: 10px;">
                     {{ form.username }}
-                    <button onclick="verify_mc_user()" class="navBttn bttnSize1">Ok</button>
+                    <button type="button" onclick="verify_mc_user()" class="navBttn bttnSize1">Ok</button>
                 </div>
                 <div id="username-feedback" style="display: hidden; color: #bb3232"></div>
             </div>
@@ -36,7 +36,7 @@
             {% csrf_token %}
             <div id="signup-pin-section" class="fade-in flex-col" style="gap: 4px;">
                 <div>Enter the pin whispered to you in-game</div>
-                {% if form.pin.errors %}<div style="color: red;">{{ form.pin.errors }}</div>{% endif %}
+                {% if form.pin.errors %}<div style="color: #bb3232;">{{ form.pin.errors }}</div>{% endif %}
                 {{ form.pin }}
             </div>
             {% comment %} {{ form.as_p }} {% endcomment %}
@@ -51,6 +51,7 @@
                         <div>Confirm Password:</div>
                         {{ form.password2 }}
                     </div>
+                    {% if form.password2.errors %}<div style="color: #bb3232;">{{ form.password2.errors }}</div>{% endif %}
                 </div>
                 
                 <button type="submit" class="navBttn">otay<img src="{% static 'img/aga.png' %}" style="width: 24px; height: 24px;" alt="a warm smile"></button>

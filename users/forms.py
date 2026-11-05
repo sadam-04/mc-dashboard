@@ -50,6 +50,12 @@ class MySignupForm(UserCreationForm):
         cleaned_data = super().clean()
         my_username = cleaned_data.get("username")
         pin = cleaned_data.get("pin")
+
+        # pw = cleaned_data.get("password1")
+        # pwc = cleaned_data.get("password2")
+
+        # if pw != pwc:
+        #     self.add_error('password2', "passwords do not match")
         
         if my_username and pin:
             cache_key = f"mc_registration_{my_username}"
