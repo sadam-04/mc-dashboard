@@ -225,3 +225,6 @@ def get_leaderboard(request):
             "status": "failure",
             "error": str(e)
         })
+
+def reactTest(request):
+    return render(request, 'hub/react.html');

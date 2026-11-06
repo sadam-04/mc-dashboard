@@ -460,4 +460,8 @@ iframe {
   #leaderboard-category {
     font-size: 1.3rem;
   }
+
+  .navBttn {
+    padding-bottom: 6px;
+  }
 }

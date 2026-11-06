@@ -10,4 +10,5 @@ urlpatterns = [
     path('map/', views.map_view, name="map"),
     path('hi/', views.say_hello_view, name="say_hello"),
     path('tp/', views.teleport, name="teleport"),
+    path('react/', views.reactTest, name="react"),
 ]

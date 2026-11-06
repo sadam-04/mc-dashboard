@@ -1,0 +1,19 @@
+{% load django_vite %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>YOOOOO</title>
+    <!-- Loads React Hot Module Replacement in dev mode -->
+    {% vite_hmr_client %} 
+    <!-- Loads React components specifically -->
+    {% vite_react_refresh %}
+</head>
+<body>
+    <!-- React Mount Point -->
+    <div id="react-root"></div>
+
+    <!-- Inject the React bundle -->
+    {% vite_asset 'src/main.jsx' %}
+</body>
+</html>
